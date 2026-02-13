@@ -25,6 +25,17 @@ use App\Http\Controllers\{
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/admin', function () {
+    return view('admin.index');
+});
+
+
+// Route::view('/about', 'about')->name('about');
+// Route::view('/cycle', 'cycle')->name('cycle');
+// Route::view('/news', 'news')->name('news');
+// Route::view('/contact', 'contact')->name('contact');
+// Route::view('/shop', 'shop')->name('shop');
+
 
 Route::resources([
     'orders' => OrdersController::class,
