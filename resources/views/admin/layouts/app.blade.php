@@ -13,11 +13,11 @@
 	<meta property="og:image" content="#" />
 	<meta name="format-detection" content="telephone=no">
     <title>User List | MetroX Admin</title>
-    <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="./assets/icons/fontawesome/css/fontawesome.min.css" rel="stylesheet">
-    <link href="./assets/icons/fontawesome/css/brands.min.css" rel="stylesheet">
-    <link href="./assets/icons/fontawesome/css/solid.min.css" rel="stylesheet">
-    <link href="./assets/css/style.css" rel="stylesheet">
+    <link href="{{ asset('admin/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/icons/fontawesome/css/fontawesome.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/icons/fontawesome/css/brands.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/icons/fontawesome/css/solid.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/css/style.css') }}" rel="stylesheet">
 </head>
 <body>
     <!--*******************

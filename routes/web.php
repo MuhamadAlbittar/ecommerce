@@ -25,10 +25,10 @@ use App\Http\Controllers\{
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/admin', function () {
+
+Route::get('/dashboard', function () {
     return view('admin.index');
 });
-
 
 // Route::view('/about', 'about')->name('about');
 // Route::view('/cycle', 'cycle')->name('cycle');
