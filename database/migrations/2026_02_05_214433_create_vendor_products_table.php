@@ -22,7 +22,7 @@ return new class extends Migration
                   ->constrained('products')
                   ->onDelete('cascade');
              // تعريف المخزون للبائع
-            $table->string('sku');
+            $table->string('sku')->unique()->nullable(); // Stock Keeping Unit
             $table->unique(['vendor_id', 'sku']);
 
             $table->decimal('price', 10, 2);
