@@ -33,7 +33,7 @@
             <div class="content-wrapper ">
             @include('layouts.navigation')
 
-                <div class="main-content mt-12 ">
+                <div class="main-content">
                     @yield('content')
                 </div>
 

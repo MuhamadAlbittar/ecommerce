@@ -19,7 +19,6 @@ class StoreUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed',Password::defaults()],
-
             'role' => ['nullable', 'in:customer,vendor_user,admin'],
             'phone' => ['nullable', 'regex:/^[0-9+\-\s]{7,20}$/'],
             'country' => ['nullable', 'string', 'max:100'],

@@ -25,6 +25,11 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'phone' => ['string','max:50'],
+            'country' => ['string','max:100'],
+            'city' => ['string','max:100'],
+            'street' => ['string','max:150'],
+            'building' => ['string','max:50'],
         ];
     }
 }
