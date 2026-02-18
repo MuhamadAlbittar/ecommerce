@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class Vendor extends Model
 {
     use HasFactory;
@@ -16,16 +17,20 @@ class Vendor extends Model
         'address',
         'status',
     ];
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'vendor_users')
+        ->withPivot(['role','permissions'])
+        ->withTimestamps();
+    }
 
     public function vendorUsers()
     {
         return $this->hasMany(VendorUser::class);
     }
 
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'vendor_users');
-    }
+
+
 
     public function vendorProducts()
     {

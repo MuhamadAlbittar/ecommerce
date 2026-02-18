@@ -29,8 +29,9 @@
                                 <li><a href="#" class="submenu-link">Invoice</a></li>
                             </ul>
                         </li>
-                        <li><a href="#" class="text-black sidebar-link"><i class="fa-regular fa-user"></i><p>vendors</p></a></li>
-                        <li><a href="#" class="text-black sidebar-link"><i class="fa-regular fa-user"></i><p>Customers</p></a></li>
+                        <li><a href="{{ route('vendors.index') }}" class="text-black sidebar-link"><i class="fa-regular fa-user"></i><p>vendors</p></a></li>
+
+                        <li><a href="user-list.html" class="text-black sidebar-link"><i class="fa-regular fa-user"></i><p>Customers</p></a></li>
                         <li><a href="#" class="text-black sidebar-link submenu-parent"><i class="fa-solid fa-pager"></i><p>Page <i class="fa-solid fa-angle-down right-icon"></i></p></a>
                             <ul class="sidebar-submenu">
                                 <li><a href="login.html" class="submenu-link">Login</a></li>

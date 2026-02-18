@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\VendorUser;
+use App\Models\User;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 
 class VendorUsersController extends Controller
@@ -11,7 +13,8 @@ class VendorUsersController extends Controller
      */
     public function index()
     {
-        //
+        $vendorUsers = VendorUser::with(['user','vendor'])->get();
+        return view('vendor_users.index', compact('vendorUsers'));
     }
 
     /**
@@ -19,7 +22,9 @@ class VendorUsersController extends Controller
      */
     public function create()
     {
-        //
+        $users = User::all();
+        $vendors = Vendor::all();
+        return view('vendor_users.create', compact('users','vendors'));
     }
 
     /**
@@ -27,38 +32,56 @@ class VendorUsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'vendor_id'=>'required|exists:vendors,id',
+            'user_id'=>'required|exists:users,id',
+            'role'=>'required|string',
+        ]);
+
+        VendorUser::create($request->all());
+        return redirect()->route('vendor-users.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(VendorUser $vendorUser)
     {
-        //
+        return view('vendor_users.show', compact('vendorUser'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(VendorUser $vendorUser)
     {
-        //
+        $users = User::all();
+        $vendors = Vendor::all();
+        return view('vendor_users.edit', compact('vendorUser','users','vendors'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, VendorUser $vendorUser)
     {
-        //
+        $request->validate([
+            'vendor_id'=>'required|exists:vendors,id',
+            'user_id'=>'required|exists:users,id',
+            'role'=>'required|string',
+        ]);
+
+        $vendorUser->update($request->all());
+        return redirect()->route('vendor-users.index');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(VendorUser $vendorUser)
     {
-        //
+        $vendorUser->delete();
+        return redirect()->route('vendor-users.index');
     }
 }

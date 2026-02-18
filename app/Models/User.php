@@ -19,7 +19,7 @@ class User extends Authenticatable
         'city',
         'street',
         'building'
-        
+
     ];
 
     /* -------------------------
@@ -27,9 +27,17 @@ class User extends Authenticatable
     --------------------------*/
 
     // User → UserAddresses (1:N)
-    public function addresses()
+    // public function addresses()
+    // {
+    //     return $this->hasMany(UserAddress::class);
+    // }
+
+// User → Vendors (N:N عبر vendor_users)
+    public function vendors()
     {
-        return $this->hasMany(UserAddress::class);
+        return $this->belongsToMany(Vendor::class, 'vendor_users')
+        ->withPivot(['role','permissions'])
+        ->withTimestamps();
     }
 
     // User → VendorUsers (1:N)
@@ -38,11 +46,7 @@ class User extends Authenticatable
         return $this->hasMany(VendorUser::class);
     }
 
-    // User → Vendors (N:N عبر vendor_users)
-    public function vendors()
-    {
-        return $this->belongsToMany(Vendor::class, 'vendor_users');
-    }
+
 
     // User → Orders (1:N)
     public function orders()
