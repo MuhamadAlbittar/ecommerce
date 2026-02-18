@@ -65,3 +65,76 @@ Route::resources([
     'shipping-methods' => ShippingMethodsController::class,
     'vendor-shipping-methods' => VendorShippingMethodsController::class,
 ]);
+
+// Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
+// Route::post('/products', [ProductsController::class, 'create'])->name('products.create');
+// Route::post('/products', [ProductsController::class, 'store'])->name('products.store');
+// Route::delete('/products/{delete_id}',[ProductsController::class,'destroy'])->name('products.delete');
+// Route::put('/products/{program}',[ProductsController::class,'update'])->name('products.update');
+
+
+
+
+
+
+// Route::get('/products/addList', function () {
+//     return view('adminPanal.product.addList');
+// })->name('products.create');
+
+// Route::get('/products',[ProductsController::class,'create'])->name('products.create');
+
+// Route::resource('products', ProductsController::class)->except(['create']);
+
+
+// Route::get('/products/create-page', function () {
+//     return view('adminPanal.product.create');
+// })->name('products.create.page');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// العملية                                     الراوت            الميثود
+
+// GET              /model                              index   عرض قائمة العناصر
+
+// GET             /model/create                        create  الإضافة صفحة عرض  
+
+// POST             /model                               store   جديد حفظ 
+
+// GET              /model/{id}                          show     عنصر عرض        
+
+// GET              /model/{id}/edit                     edit     التعديل صفحة عرض  
+
+// PUT             /PATCH /model/{id}                   update   تحديث
+
+// DELETE           /model/{id}                        destroy     حذف  
+
+
+
+
+
+
+

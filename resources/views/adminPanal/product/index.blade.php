@@ -14,7 +14,7 @@
                                 <i class="fa-solid fa-cloud-arrow-down"></i> Export
                               </button>
                               <!-- Add Product Button -->
-                               <a href="product-add.html" class="btn btn-light d-flex align-items-center gap-2"><i class="fas fa-plus"></i> Add Product</a>
+                               <a href="{{ route('products.create') }}" class="btn btn-light d-flex align-items-center gap-2"><i class="fas fa-plus"></i> Add Product</a>
                             </div>
                             <!-- Search Input -->
                             <div class="search-box align-items-center  d-flex">
@@ -77,36 +77,49 @@
                                                 </tr>
                                               </thead>
                                               <tbody>
-                                                <tr>
-                                                  <td><input type="checkbox" class="custom-checkbox row-checkbox"></td>
-                                                  <td>#12598</td>
-                                                  <td><img src="./assets/images/p1.jfif" alt="Product Image" class="p-img-thumbnail"></td>
-                                                  <td>Off-white shoulder wide...</td>
-                                                  <td>Women</td>
-                                                  <td>₹4,099</td>
-                                                  <td>25</td>
-                                                  <td>123456</td>
-                                                  <td><span class="status-badge status-success">In Stock</span></td>
-                                                  <td>
-                                                    <a href="#" class="btn btn-sm"><i class="fa-solid fa-edit"></i></a>
-                                                    <a href="#" class="btn btn-sm"><i class="fa-solid fa-trash"></i></a>
-                                                  </td>
-                                                </tr>
-                                                <tr>
-                                                  <td><input type="checkbox" class="custom-checkbox row-checkbox"></td>
-                                                  <td>#12599</td>
-                                                  <td><img src="./assets/images/p1.jfif" alt="Product Image" class="p-img-thumbnail"></td>
-                                                  <td>Blue denim jacket</td>
-                                                  <td>Men</td>
-                                                  <td>₹3,299</td>
-                                                  <td>15</td>
-                                                  <td>654321</td>
-                                                  <td><span class="status-badge status-danger">Out of Stock</span></td>
-                                                  <td>
-                                                    <a href="#" class="btn btn-sm"><i class="fa-solid fa-edit"></i></a>
-                                                    <a href="#" class="btn btn-sm"><i class="fa-solid fa-trash"></i></a>
-                                                  </td>
-                                                </tr>
+                                                  @foreach ($products as $product)
+                                                      <tr>
+                                                          <td><input type="checkbox" class="custom-checkbox row-checkbox"></td>
+
+                                                          <td>#{{ $product->id }}</td>
+
+                                                          <td>
+                                                              @if($product->image)
+                                                                  <img src="{{ asset('uploads/products/' . $product->image) }}" 
+                                                                      alt="Product Image" class="p-img-thumbnail">
+                                                              @else
+                                                                  <span>No Image</span>
+                                                              @endif
+                                                          </td>
+
+                                                          <td>{{ $product->name }}</td>
+
+                                                          <td>{{ $product->category->name ?? 'No Category' }}</td>
+
+                                                          <td>{{ $product->price }}</td>
+
+                                                          <td>{{ $product->stock ?? 0 }}</td>
+
+                                                          <td>{{ $product->sku ?? '-' }}</td>
+
+                                                          <td>
+                                                              <span class="status-badge status-success">
+                                                                  {{ $product->status ?? 'Active' }}
+                                                              </span>
+                                                          </td>
+
+                                                          <td>
+                                                              <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm">
+                                                                  <i class="fa-solid fa-edit"></i>
+                                                              </a>
+
+                                                            <button type="button" class="btn btn-sm text-danger" onclick="openDeleteModal({{ $product->id }})">
+                                                                <i class="fa-solid fa-trash"></i>
+                                                            </button>
+                                                          </td>
+                                                      </tr>
+                                                  @endforeach
+
                                               </tbody>
                                             </table>
                                         </div>
@@ -133,6 +146,55 @@
                             </ul>
                         </div>
                         <!-- end pagination -->
+                        <div id="deleteModal" class="modal-overlay" style="display:none;">
+                            <div class="modal-box">
+                                <h4>Are you sure?</h4>
+                                <p>This action will permanently delete the product.</p>
+
+                                <form id="deleteForm" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit" class="btn btn-danger w-100 mt-3">Yes, Delete</button>
+                                </form>
+
+                                <button class="btn btn-secondary w-100 mt-2" onclick="closeDeleteModal()">Cancel</button>
+                            </div>
+                        </div>
+                        <style>
+                            .modal-overlay {
+                                position: fixed;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                background: rgba(0,0,0,0.55);
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                z-index: 99999;
+                            }
+
+                            .modal-box {
+                                background: #fff;
+                                padding: 25px;
+                                border-radius: 12px;
+                                width: 350px;
+                                text-align: center;
+                                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+                            }
+                        </style>
+                        <script>
+                            function openDeleteModal(id) {
+                                let form = document.getElementById('deleteForm');
+                                form.action = "/products/" + id;
+                                document.getElementById('deleteModal').style.display = 'flex';
+                            }
+
+                            function closeDeleteModal() {
+                                document.getElementById('deleteModal').style.display = 'none';
+                            }
+                        </script>
                     </div>
                 </div>
            </div>

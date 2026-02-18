@@ -9,18 +9,24 @@ class Product extends Model
     use HasFactory;
     protected $table = 'products';
 
-    protected $fillable = [
+     protected $fillable = [
         'name',
-        'description',
+        'product_id',
         'sku',
+        'vendor',
+        'description',
+        'image',
         'price',
-        'status',
+        'sale_price',
+        'category_id',
+        'tags',
     ];
+
     
-    protected $casts = [
-    'attributes' => 'array',
-    'images' => 'array',
-];
+//     protected $casts = [
+//     'attributes' => 'array',
+//     'images' => 'array',
+// ];
 
     public function vendorProducts()
     {
