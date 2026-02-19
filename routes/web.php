@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
@@ -35,6 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store'); 
 });
 
 require __DIR__.'/auth.php';
@@ -120,17 +122,17 @@ Route::resources([
 
 // GET              /model                              index   عرض قائمة العناصر
 
-// GET             /model/create                        create  الإضافة صفحة عرض  
+// GET             /model/create                        create  الإضافة صفحة عرض
 
-// POST             /model                               store   جديد حفظ 
+// POST             /model                               store   جديد حفظ
 
-// GET              /model/{id}                          show     عنصر عرض        
+// GET              /model/{id}                          show     عنصر عرض
 
-// GET              /model/{id}/edit                     edit     التعديل صفحة عرض  
+// GET              /model/{id}/edit                     edit     التعديل صفحة عرض
 
 // PUT             /PATCH /model/{id}                   update   تحديث
 
-// DELETE           /model/{id}                        destroy     حذف  
+// DELETE           /model/{id}                        destroy     حذف
 
 
 
