@@ -48,6 +48,7 @@ class ProductsController extends Controller
                 'sale_price'  => 'nullable|numeric',
                 'tags'        => 'nullable|string',
                 'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+                'status'      => 'nullable|string|in:active,inactive'
             ]);
 
             // 2) رفع الصورة إذا موجودة
@@ -101,6 +102,7 @@ class ProductsController extends Controller
             'sale_price'  => 'nullable|numeric',
             'tags'        => 'nullable|string',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'status'      => 'nullable|string|in:active,inactive'
         ]);
 
         // تحديث الصورة إذا تم رفع واحدة جديدة

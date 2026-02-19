@@ -34,6 +34,23 @@
                                     <label class="form-label">Vendor</label>
                                     <input type="text" class="form-control" name="vendor">
                                 </div>
+                                
+                                {{-- 🔥 حالة المنتج --}}
+                                <div class="col-md-6">
+                                    <label for="status" class="form-label">Status</label>
+                                    <select 
+                                        name="status" 
+                                        id="status" 
+                                        class="form-select @error('status') is-invalid @enderror"
+                                    >
+                                        <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
+                                        <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                    </select>
+
+                                    @error('status')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
                                 <div class="col-12">
                                     <label class="form-label">Description</label>

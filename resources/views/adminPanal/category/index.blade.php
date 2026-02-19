@@ -5,7 +5,7 @@
                 <div class="card-service-section px-0 px-md-0 px-lg-3">
                     <div class="container-fluid">
                         <div class="d-flex justify-content-between align-items-center bg-teal">
-                              <a href="category-add.html" class="btn btn-light d-flex align-items-center gap-2"><i class="fas fa-plus"></i> Add category</a>
+                              <a href="{{ route('categories.create') }}" class="btn btn-light d-flex align-items-center gap-2"><i class="fas fa-plus"></i> Add category</a>
                               <div class="search-box align-items-center d-flex">
                                 <i class="fas fa-search text-light"></i>
                                 <input
@@ -58,47 +58,53 @@
                                         </tr>
                                       </thead>
                                       <tbody>
-                                        <tr>
-                                          <td><input type="checkbox" class="custom-checkbox row-checkbox"></td>
-                                          <td>Fashion</td>
-                                          <td><img src="./assets/images/p1.jfif" alt="Product Image" class="p-img-thumbnail"></td>
-                                          <td>25</td>
-                                          <td><span class="status-badge status-success">Active</span></td>
-                                          <td>
-                                            <a href="#" class="btn btn-sm"><i class="fa-solid fa-edit"></i></a>
-                                            <a href="#" class="btn btn-sm"><i class="fa-solid fa-trash"></i></a>
-                                            <div class="dropdown">
-                                                <a class="nav-link px-3 pt-1 pb-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                                                </a>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item py-2" href="#">Active</a></li>
-                                                    <li><a class="dropdown-item py-2" href="#">Inactive</a></li>
-                                                </ul>
-                                            </div>
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="checkbox" class="custom-checkbox row-checkbox"></td>
-                                            <td>Sport</td>
-                                            <td><img src="./assets/images/p1.jfif" alt="Product Image" class="p-img-thumbnail"></td>
-                                            <td>25</td>
-                                            <td><span class="status-badge status-danger">Inactive</span></td>
-                                            <td>
-                                              <a href="#" class="btn btn-sm"><i class="fa-solid fa-edit"></i></a>
-                                              <a href="#" class="btn btn-sm"><i class="fa-solid fa-trash"></i></a>
-                                              <div class="dropdown">
-                                                <a class="nav-link px-3 pt-1 pb-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                                                </a>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item py-2" href="#">Active</a></li>
-                                                    <li><a class="dropdown-item py-2" href="#">Inactive</a></li>
-                                                </ul>
-                                            </div>
-                                            </td>
-                                          </tr>
-                                      </tbody>
+                                        @foreach ($categories as $category)
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="custom-checkbox row-checkbox">
+                                                </td>
+
+                                                <td>{{ $category->name }}</td>
+
+                                                <td>
+                                                    <img src="{{ asset($category->image) }}" 
+                                                        alt="Product Image" 
+                                                        class="p-img-thumbnail">
+                                                </td>
+
+                                                <td>{{ $category->quantity }}</td>
+
+                                                <td>
+                                                    @if ($category->status == 'Active')
+                                                        <span class="status-badge status-success">Active</span>
+                                                    @else
+                                                        <span class="status-badge status-danger">Inactive</span>
+                                                    @endif
+                                                </td>
+
+                                                <td>
+                                                    <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-sm">
+                                                        <i class="fa-solid fa-edit"></i>
+                                                    </a>
+
+                                                    <button type="button" class="btn btn-sm text-danger" onclick="openDeleteModal({{ $category->id }})">
+                                                                <i class="fa-solid fa-trash"></i>
+                                                            </button>
+
+                                                    <div class="dropdown">
+                                                        <a class="nav-link px-3 pt-1 pb-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                        </a>
+
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item py-2" href="#">Active</a></li>
+                                                            <li><a class="dropdown-item py-2" href="#">Inactive</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                     </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -118,6 +124,54 @@
                             </ul>
                         </div>
                         <!-- end pagination -->
+                        <div id="deleteModal" class="modal-overlay" style="display:none;">
+                            <div class="modal-box">
+                                <h4>Are you sure?</h4>
+                                <p>This action will permanently delete the category.</p>
+                        <form id="deleteForm" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit" class="btn btn-danger w-100 mt-3">Yes, Delete</button>
+                                </form>
+
+                                <button class="btn btn-secondary w-100 mt-2" onclick="closeDeleteModal()">Cancel</button>
+                            </div>
+                        </div>
+                        <style>
+                            .modal-overlay {
+                                position: fixed;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                background: rgba(0,0,0,0.55);
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                z-index: 99999;
+                            }
+
+                            .modal-box {
+                                background: #fff;
+                                padding: 25px;
+                                border-radius: 12px;
+                                width: 350px;
+                                text-align: center;
+                                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+                            }
+                        </style>
+                        <script>
+                            function openDeleteModal(id) {
+                                let form = document.getElementById('deleteForm');
+                                form.action = "/products/" + id;
+                                document.getElementById('deleteModal').style.display = 'flex';
+                            }
+
+                            function closeDeleteModal() {
+                                document.getElementById('deleteModal').style.display = 'none';
+                            }
+                        </script>
                     </div>
                 </div>
            </div>

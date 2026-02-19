@@ -103,10 +103,12 @@
                                                           <td>{{ $product->sku ?? '-' }}</td>
 
                                                           <td>
-                                                              <span class="status-badge status-success">
-                                                                  {{ $product->status ?? 'Active' }}
-                                                              </span>
-                                                          </td>
+                                                                @if (strtolower($product->status) == 'active')
+                                                                    <span class="status-badge status-success">Active</span>
+                                                                @else
+                                                                    <span class="status-badge status-danger">Inactive</span>
+                                                                @endif
+                                                         </td>
 
                                                           <td>
                                                               <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm">

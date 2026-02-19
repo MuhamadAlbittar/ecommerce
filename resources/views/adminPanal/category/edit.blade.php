@@ -3,8 +3,12 @@
 <div class="main-content">
     <div class="product-section px-0 px-md-0 px-lg-3 mt-150">
         <div class="container">
-            <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">
+
+            <form action="{{ route('categories.update', $category->id) }}" 
+                  method="POST" 
+                  enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
 
                 <div class="row">
 
@@ -12,7 +16,7 @@
                     <div class="col-12">
                         <div class="card shadow-sm border-0 border-radius-12 mb-4">
                             <div class="card-header bg-white pt-3">
-                                <h5 class="fw-normal text-start">Category information</h5>
+                                <h5 class="fw-normal text-start">Edit Category</h5>
                             </div>
 
                             <div class="card-body p-4">
@@ -26,7 +30,7 @@
                                             type="text" 
                                             class="form-control @error('name') is-invalid @enderror" 
                                             id="inputName"
-                                            value="{{ old('name') }}"
+                                            value="{{ old('name', $category->name) }}"
                                         >
                                         @error('name')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -42,8 +46,8 @@
                                             class="form-select @error('status') is-invalid @enderror"
                                         >
                                             <option value="">Choose...</option>
-                                            <option value="Active" {{ old('status') == 'Active' ? 'selected' : '' }}>Active</option>
-                                            <option value="Inactive" {{ old('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                                            <option value="Active" {{ old('status', $category->status) == 'Active' ? 'selected' : '' }}>Active</option>
+                                            <option value="Inactive" {{ old('status', $category->status) == 'Inactive' ? 'selected' : '' }}>Inactive</option>
                                         </select>
                                         @error('status')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -59,17 +63,32 @@
                     <div class="col-12">
                         <div class="card shadow-sm border-0 border-radius-12 mb-4">
                             <div class="card-header bg-white pt-3">
-                                <h5 class="fw-normal text-start">Upload images</h5>
+                                <h5 class="fw-normal text-start">Category Image</h5>
                             </div>
 
                             <div class="card-body p-4">
+
+                                {{-- Current Image Preview --}}
+                                @if($category->image)
+                                    <div class="mb-3">
+                                        <label class="form-label">Current Image</label>
+                                        <div>
+                                            <img 
+                                                src="{{ asset('storage/' . $category->image) }}" 
+                                                alt="Category Image" 
+                                                class="p-img-thumbnail"
+                                                style="width: 120px; border-radius: 8px;"
+                                            >
+                                        </div>
+                                    </div>
+                                @endif
+
                                 <div class="file-upload-container">
 
                                     <div id="dropzone" class="dropzone">
                                         <div class="icon">
-                                            <!-- ضع هنا الـ SVG تبعك كما كان -->
                                             <svg width="90" height="90" viewBox="0 0 105 135" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                ... نفس الـ SVG اللي كان عندك ...
+                                                <!-- SVG تبعك -->
                                             </svg>
                                         </div>
 
@@ -83,7 +102,6 @@
                                             type="file" 
                                             hidden
                                         />
-
                                     </div>
 
                                     <div id="preview" class="preview-grid"></div>
@@ -102,11 +120,11 @@
                         <div class="card shadow-sm border-0 border-radius-12 mb-4">
                             <div class="card-body p-4 d-flex">
                                 <a href="{{ route('categories.index') }}" class="btn text-primary border-color hover-bg-primary w-50 me-2">
-                                    Discard
+                                    Cancel
                                 </a>
 
                                 <button type="submit" class="btn custom-bg-primary w-50 text-white btn-hover">
-                                    Save
+                                    Update
                                 </button>
                             </div>
                         </div>
@@ -114,6 +132,7 @@
 
                 </div> {{-- row --}}
             </form>
+
         </div>
     </div>
 </div>
