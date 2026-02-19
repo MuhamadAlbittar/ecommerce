@@ -2,34 +2,42 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-
 use App\Models\Cart;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\VendorProduct;
+use Illuminate\Database\Seeder;
 
 class CartSeeder extends Seeder
 {
     public function run(): void
     {
-        User::all()->each(function ($user) {
+        User::take(5)->get()->each(function ($user) {
 
             $cart = Cart::create([
                 'user_id' => $user->id,
-                'status' => 'active'
+                'status'  => 'active',
             ]);
 
-            $products = Product::inRandomOrder()->take(rand(1,4))->get();
+            $products = Product::inRandomOrder()->take(rand(1, 4))->get();
 
             foreach ($products as $product) {
-                $cart->items()->create([
-                    'product_id' => $product->id,
-                    'vendor_id' => $product->vendors()->first()->id ?? 1,
-                    'quantity' => rand(1,3),
+
+                // جيب أول بائع عنده هاد المنتج
+                $vendorProduct = VendorProduct::where('product_id', $product->id)->first();
+
+                // لو ما في بائع للمنتج، تخطاه
+                if (!$vendorProduct) {
+                    continue;
+                }
+
+                $cart->cartItems()->create([
+                    'product_id'    => $product->id,
+                    'vendor_id'     => $vendorProduct->vendor_id,
+                    'quantity'      => rand(1, 3),
+                    'price_at_time' => $vendorProduct->price,
                 ]);
             }
         });
     }
 }
-
