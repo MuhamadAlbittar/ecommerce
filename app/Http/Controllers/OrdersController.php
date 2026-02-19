@@ -11,7 +11,8 @@ class OrdersController extends Controller
      */
     public function index()
     {
-        //
+        $order = auth()->user()->orders()->latest()->get();
+        return view('adminpanal.order.index', compact('order'));
     }
 
     /**
@@ -19,7 +20,8 @@ class OrdersController extends Controller
      */
     public function create()
     {
-        //
+        // $carts = auth()->user()->carts()->whereNull('order_id')->get();
+        return view('adminpanal.order.invoice',/* compact('carts')*/);
     }
 
     /**
@@ -27,7 +29,16 @@ class OrdersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'cart_id' => 'required|exists:carts,id',
+        ]);
+        $cart = auth()->user()->carts()->findOrFail($validated['cart_id']);
+        $order = $cart->orders()->create([
+            'user_id' => auth()->id(),
+            'total_price' => $cart->total_price,
+        ]);
+        $cart->items()->update(['order_id' => $order->id]);
+        return redirect()->route('orders.index')->with('success', 'Order created successfully.');
     }
 
     /**
@@ -35,7 +46,8 @@ class OrdersController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // $order = auth()->user()->orders()->findOrFail($id);
+        return view('adminpanal.order.orderDetails' /*, compact('order')*/);
     }
 
     /**

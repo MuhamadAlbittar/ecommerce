@@ -24,9 +24,9 @@
 
                         <li><a href="#" class="text-black sidebar-link submenu-parent"><i class="fa-solid fa-bucket"></i><p>Order <i class="fa-solid fa-angle-down right-icon"></i></p></a>
                             <ul class="sidebar-submenu">
-                                <li><a href="#" class="submenu-link">List</a></li>
-                                <li><a href="#" class="submenu-link">Details</a></li>
-                                <li><a href="#" class="submenu-link">Invoice</a></li>
+                                <li><a href="{{ route('orders.index') }}" class="submenu-link">List</a></li>
+                                <li><a href="{{ route('orders.show', 1) }}" class="submenu-link">Details</a></li>
+                                <li><a href="{{ route('orders.create') }}" class="submenu-link">Invoice</a></li>{{--{{ route('orders.invoice', 1) }}--}}
                             </ul>
                         </li>
                         <li><a href="{{ route('vendors.index') }}" class="text-black sidebar-link"><i class="fa-regular fa-user"></i><p>vendors</p></a></li>
@@ -36,7 +36,7 @@
                             <ul class="sidebar-submenu">
                                 <li><a href="{{route('login')}}" class="submenu-link">Login</a></li>
                                 <li><a href="{{route('register')}}" class="submenu-link">Signup</a></li>
-                                <li><a href="forgot-password.html" class="submenu-link">Forgot Password</a></li>
+                                <li><a href="{{route('password.request')}}" class="submenu-link">Forgot Password</a></li>
                             </ul>
                         </li>
                         <li>
