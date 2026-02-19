@@ -34,8 +34,8 @@
                         <li><a href="user-list.html" class="text-black sidebar-link"><i class="fa-regular fa-user"></i><p>Customers</p></a></li>
                         <li><a href="#" class="text-black sidebar-link submenu-parent"><i class="fa-solid fa-pager"></i><p>Page <i class="fa-solid fa-angle-down right-icon"></i></p></a>
                             <ul class="sidebar-submenu">
-                                <li><a href="login.html" class="submenu-link">Login</a></li>
-                                <li><a href="signup.html" class="submenu-link">Signup</a></li>
+                                <li><a href="{{route('login')}}" class="submenu-link">Login</a></li>
+                                <li><a href="{{route('register')}}" class="submenu-link">Signup</a></li>
                                 <li><a href="forgot-password.html" class="submenu-link">Forgot Password</a></li>
                             </ul>
                         </li>

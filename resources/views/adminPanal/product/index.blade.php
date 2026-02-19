@@ -118,6 +118,31 @@
                                                             <button type="button" class="btn btn-sm text-danger" onclick="openDeleteModal({{ $product->id }})">
                                                                 <i class="fa-solid fa-trash"></i>
                                                             </button>
+
+                                                            <!-- زر القائمة -->
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-light" data-bs-toggle="dropdown">⋮</button>
+
+                                                                <ul class="dropdown-menu">
+                                                                    <li>
+                                                                        <form action="{{ route('products.update', $product->id) }}" method="POST">
+                                                                            @csrf
+                                                                            @method('PUT')
+                                                                            <input type="hidden" name="status" value="Active">
+                                                                            <button class="dropdown-item">Active</button>
+                                                                        </form>
+                                                                    </li>
+
+                                                                    <li>
+                                                                        <form action="{{ route('products.update', $product->id) }}" method="POST">
+                                                                            @csrf
+                                                                            @method('PUT')
+                                                                            <input type="hidden" name="status" value="Inactive">
+                                                                            <button class="dropdown-item">Inactive</button>
+                                                                        </form>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
                                                           </td>
                                                       </tr>
                                                   @endforeach

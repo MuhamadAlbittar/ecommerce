@@ -75,42 +75,46 @@ class CategoriesController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-    {
-        // 1) Validation
-        $request->validate([
-            'name'   => 'required|string|max:255',
-            'status' => 'required|in:Active,Inactive',
-            'image'  => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-        ]);
+{
+    // 1) Get category FIRST
+    $category = Category::findOrFail($id);
 
-        // 2) Get category
-        $category = Category::findOrFail($id);
+    // 2) Validation
+    $request->validate([
+        'name'   => 'sometimes|required|string|max:255',
+        'status' => 'sometimes|required|in:Active,Inactive',
+        'image'  => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+    ]);
 
-        // 3) Update basic fields
-        $category->name   = $request->name;
+    // 3) Update status only if sent
+    if ($request->has('status')) {
         $category->status = $request->status;
+    }
 
-        // 4) Handle image upload
-        if ($request->hasFile('image')) {
+    // 4) Update name if sent
+    if ($request->has('name')) {
+        $category->name = $request->name;
+    }
 
-            // Delete old image if exists
-            if ($category->image && Storage::disk('public')->exists($category->image)) {
-                Storage::disk('public')->delete($category->image);
-            }
+    // 5) Handle image upload
+    if ($request->hasFile('image')) {
 
-            // Store new image
-            $imagePath = $request->file('image')->store('categories', 'public');
-            $category->image = $imagePath;
+        if ($category->image && Storage::disk('public')->exists($category->image)) {
+            Storage::disk('public')->delete($category->image);
         }
 
-        // 5) Save
-        $category->save();
-
-        // 6) Redirect
-        return redirect()
-            ->route('categories.index')
-            ->with('success', 'Category updated successfully');
+        $imagePath = $request->file('image')->store('categories', 'public');
+        $category->image = $imagePath;
     }
+
+    // 6) Save
+    $category->save();
+
+    // 7) Redirect
+    return redirect()
+        ->route('categories.index')
+        ->with('success', 'Category updated successfully');
+}
 
     /**
      * Remove the specified resource from storage.

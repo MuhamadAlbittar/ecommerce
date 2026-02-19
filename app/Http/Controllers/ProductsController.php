@@ -87,36 +87,37 @@ class ProductsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
-    {
-        $product = Product::findOrFail($id);
+    
+        public function update(Request $request, $id)
+        {
+            // 1) Get product
+            $product = Product::findOrFail($id);
 
-        $validated = $request->validate([
-            'name'        => 'required|string|max:255',
-            'product_id'  => 'nullable|string',
-            'sku'         => 'nullable|string',
-            'vendor'      => 'nullable|string',
-            'description' => 'nullable|string',
-            'category_id' => 'nullable|exists:categories,id',
-            'price'       => 'required|numeric',
-            'sale_price'  => 'nullable|numeric',
-            'tags'        => 'nullable|string',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'status'      => 'nullable|string|in:active,inactive'
-        ]);
+            // 2) Validation
+            $validated = $request->validate([
+                'name'        => 'sometimes|required|string|max:255',
+                'product_id'  => 'nullable|string',
+                'sku'         => 'nullable|string',
+                'vendor'      => 'nullable|string',
+                'description' => 'nullable|string',
+                'category_id' => 'nullable|exists:categories,id',
+                'price'       => 'sometimes|required|numeric',
+                'sale_price'  => 'nullable|numeric',
+                'tags'        => 'nullable|string',
+                'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+                'status'      => 'sometimes|required|string|in:Active,Inactive',
+            ]);
+            // 3) Handle image upload
+            if ($request->hasFile('image')) {
+                $imageName = time() . '.' . $request->image->extension();
+                $request->image->move(public_path('uploads/products'), $imageName);
+                $validated['image'] = $imageName;
+            }
+            // 4) Update product
+            $product->update($validated);
 
-        // تحديث الصورة إذا تم رفع واحدة جديدة
-        if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('uploads/products'), $imageName);
-            $validated['image'] = $imageName;
+            return redirect()->route('products.index')->with('success', 'تم تحديث المنتج بنجاح');
         }
-
-        // تحديث المنتج
-        $product->update($validated);
-
-        return redirect()->route('products.index')->with('success', 'تم تحديث المنتج بنجاح');
-    }
 
     /**
      * Remove the specified resource from storage.

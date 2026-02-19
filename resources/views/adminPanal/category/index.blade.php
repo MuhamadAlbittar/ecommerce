@@ -91,15 +91,32 @@
                                                                 <i class="fa-solid fa-trash"></i>
                                                             </button>
 
-                                                    <div class="dropdown">
-                                                        <a class="nav-link px-3 pt-1 pb-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <i class="fa-solid fa-ellipsis-vertical"></i>
-                                                        </a>
+                                                    
 
-                                                        <ul class="dropdown-menu">
-                                                            <li><a class="dropdown-item py-2" href="#">Active</a></li>
-                                                            <li><a class="dropdown-item py-2" href="#">Inactive</a></li>
-                                                        </ul>
+                                                        <!-- زر القائمة -->
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-light" data-bs-toggle="dropdown">⋮</button>
+
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    <form action="{{ route('categories.update', $category->id) }}" method="POST">
+                                                                        @csrf
+                                                                        @method('PUT')
+                                                                        <input type="hidden" name="status" value="Active">
+                                                                        <button class="dropdown-item">Active</button>
+                                                                    </form>
+                                                                </li>
+
+                                                                <li>
+                                                                    <form action="{{ route('categories.update', $category->id) }}" method="POST">
+                                                                        @csrf
+                                                                        @method('PUT')
+                                                                        <input type="hidden" name="status" value="Inactive">
+                                                                        <button class="dropdown-item">Inactive</button>
+                                                                    </form>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>

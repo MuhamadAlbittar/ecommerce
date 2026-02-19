@@ -34,7 +34,7 @@
                                                 {{ $user->email }}<br>
                                             @endforeach</td>
                                         <td>{{ $vendor->phone }}</td>
-                                        <td>{{ $vendor->created_at->format('d M, Y g:i A') }}</td>
+                                        <td>{{ $vendor->created_at?->format('d M, Y g:i A') }}</td>
                                         <td>{{ $vendor->status }}</td>
                                         <td class="d-flex">
                                             <a href="#" class="btn btn-sm"><i class="fa-solid fa-edit"></i></a>
