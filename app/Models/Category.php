@@ -20,8 +20,12 @@ class Category extends Model
         return $this->hasMany(ProductCategory::class);
     }
 
-    public function products()
-    {
-        return $this->belongsToMany(Product::class, 'product_categories');
-    }
+    // public function products()
+    // {
+    //     return $this->belongsToMany(Product::class, 'product_categories');
+    // }
+public function products()
+{
+    return $this->hasMany(Product::class);
+}
 }

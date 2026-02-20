@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -35,38 +36,37 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store'); 
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+
+    // حماية جميع مسارات الإدارة
+    Route::resources([
+        'orders' => OrdersController::class,
+        'order-items' => OrderItemsController::class,
+        'order-vendors' => OrderVendorsController::class,
+        'order-shipments' => OrderShipmentsController::class,
+        'carts' => CartsController::class,
+        'cart-items' => CartItemsController::class,
+        'products' => ProductsController::class,
+        'vendor-products' => VendorProductsController::class,
+        'vendors' => VendorsController::class,
+        'vendor-users' => VendorUsersController::class,
+        'categories' => CategoriesController::class,
+        'product-categories' => ProductCategoriesController::class,
+        'payments' => PaymentsController::class,
+        'payment-methods' => PaymentMethodsController::class,
+        'refunds' => RefundsController::class,
+        'refund-items' => RefundItemsController::class,
+        'shipping-methods' => ShippingMethodsController::class,
+        'vendor-shipping-methods' => VendorShippingMethodsController::class,
+    ]);
+
+    // مسار مخصص لعرض الفاتورة
+    Route::get('/orders/{order}/invoice', [OrdersController::class, 'invoice'])->name('orders.invoice');
 });
 
 require __DIR__.'/auth.php';
-Route::resources([
-    'orders' => OrdersController::class,
-    'order-items' => OrderItemsController::class,
-    'order-vendors' => OrderVendorsController::class,
-    'order-shipments' => OrderShipmentsController::class,
-
-    'carts' => CartsController::class,
-    'cart-items' => CartItemsController::class,
-
-    'products' => ProductsController::class,
-    'vendor-products' => VendorProductsController::class,
-
-    'vendors' => VendorsController::class,
-    'vendor-users' => VendorUsersController::class,
-
-    'categories' => CategoriesController::class,
-    'product-categories' => ProductCategoriesController::class,
-
-    'payments' => PaymentsController::class,
-    'payment-methods' => PaymentMethodsController::class,
-
-    'refunds' => RefundsController::class,
-    'refund-items' => RefundItemsController::class,
-
-    'shipping-methods' => ShippingMethodsController::class,
-    'vendor-shipping-methods' => VendorShippingMethodsController::class,
-]);
 
 // Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
 // Route::post('/products', [ProductsController::class, 'create'])->name('products.create');

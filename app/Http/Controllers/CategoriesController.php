@@ -115,22 +115,22 @@ class CategoriesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
-    {
-        $category = Category::findOrFail($id);
+public function destroy($id)
+{
+    $category = Category::findOrFail($id);
 
-        // حذف الصورة إذا موجودة
-        if ($category->image && file_exists(public_path('uploads/categories/' . $category->image))) {
-            unlink(public_path('uploads/categories/' . $category->image));
-        }
-
-        if ($category->products()->count() > 0) {
-            return redirect()->back()->with('error', 'Cannot delete category with existing products');
-        }
-
-        $category->delete();
-
-        return redirect()->route('categories.index')
-                 ->with('success', 'Category deleted successfully');
+    // حذف الصورة باستخدام Storage (وليس unlink)
+    if ($category->image && Storage::disk('public')->exists($category->image)) {
+        Storage::disk('public')->delete($category->image);
     }
+
+    if ($category->products()->count() > 0) {
+        return redirect()->back()->with('error', 'لا يمكن حذف تصنيف يحتوي على منتجات');
+    }
+
+    $category->delete();
+
+    return redirect()->route('categories.index')
+             ->with('success', 'تم حذف التصنيف بنجاح');
+}
 }

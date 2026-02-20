@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class Product extends Model
 {
     use HasFactory;
+
     protected $table = 'products';
 
-     protected $fillable = [
+    protected $fillable = [
         'name',
         'product_id',
         'sku',
@@ -23,39 +25,37 @@ class Product extends Model
         'status',
     ];
 
-    
-//     protected $casts = [
-//     'attributes' => 'array',
-//     'images' => 'array',
-// ];
+    // ========= العلاقات الجديدة (بدلاً من القديمة) =========
 
-    public function vendorProducts()
+    // علاقة مع التصنيف (واحد)
+    public function category()
     {
-        return $this->hasMany(VendorProduct::class);
+        return $this->belongsTo(Category::class);
     }
 
+    // علاقة مع البائعين (many-to-many) تبقى كما هي
     public function vendors()
     {
         return $this->belongsToMany(Vendor::class, 'vendor_products');
     }
 
-    public function productCategories()
-    {
-        return $this->hasMany(ProductCategory::class);
-    }
-
-    public function categories()
-    {
-        return $this->belongsToMany(Category::class, 'product_categories');
-    }
-
+    // علاقة مع عناصر الطلب
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
     }
 
+    // علاقة مع مرتجعات
     public function refundItems()
     {
         return $this->hasMany(RefundItem::class);
     }
+
+    // إذا كنت تحتاج دوال أخرى مثل vendorProducts، يمكنك الاحتفاظ بها
+    public function vendorProducts()
+    {
+        return $this->hasMany(VendorProduct::class);
+    }
+
+    // ملاحظة: تم إزالة العلاقات many-to-many مع categories والوسيط productCategories
 }
