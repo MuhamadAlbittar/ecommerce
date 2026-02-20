@@ -65,6 +65,17 @@ Route::resources([
     'shipping-methods' => ShippingMethodsController::class,
     'vendor-shipping-methods' => VendorShippingMethodsController::class,
 ]);
+// Storefront
+Route::get('/store', [\App\Http\Controllers\StoreController::class, 'index'])->name('store.index');
+
+// Cart
+Route::get('/cart', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add/{id}', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
+Route::get('/cart/remove/{id}', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
+Route::get('/cart/clear', [\App\Http\Controllers\CartController::class, 'clear'])->name('cart.clear');
+
+
+
 
 // Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
 // Route::post('/products', [ProductsController::class, 'create'])->name('products.create');

@@ -1,5 +1,12 @@
 <nav x-data="{ open: false }" class="header px-0 px-md-0 px-lg-3 pt-2 pt-sm-2 pt-md-2  pt-lg-4">
     <!-- Primary Navigation Menu -->
+    {{--store icon--}}
+    <div class="hidden sm:flex sm:items-center sm:ms-6 me-4">
+        <a href="{{ route('store.index') }}" class="text-gray-700 text-xl" title="الانتقال إلى المتجر">
+            <i class="fa-solid fa-store"></i>
+        </a>
+    </div>
+    {{--end store icon--}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
