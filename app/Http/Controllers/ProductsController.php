@@ -48,7 +48,7 @@ class ProductsController extends Controller
                 'sale_price'  => 'nullable|numeric',
                 'tags'        => 'nullable|string',
                 'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-                'status'      => 'nullable|string|in:active,inactive'
+                'status'      => 'nullable|string|in:In Stock,Out of Stock'
             ]);
 
             // 2) رفع الصورة إذا موجودة
@@ -105,7 +105,7 @@ class ProductsController extends Controller
                 'sale_price'  => 'nullable|numeric',
                 'tags'        => 'nullable|string',
                 'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-                'status'      => 'sometimes|required|string|in:Active,Inactive',
+                'status'      => 'sometimes|required|string|in:In Stock,Out of Stock',
             ]);
             // 3) Handle image upload
             if ($request->hasFile('image')) {

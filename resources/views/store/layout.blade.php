@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Midad Store</title>
+    <title>Cycle Store</title>
 
     <link href="{{ asset('adminPanal/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('adminPanal/icons/fontawesome/css/fontawesome.min.css') }}" rel="stylesheet">
@@ -79,11 +79,11 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('products.create') }}">Add a product</a>
+                    <a class="nav-link text-white" href="{{ route('products.create') }}">Sell</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('store.index') }}">products</a>
+                    <a class="nav-link text-white" href="{{ route('store.index') }}">Products</a>
                 </li>
 
             </ul>

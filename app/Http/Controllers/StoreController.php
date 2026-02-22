@@ -8,7 +8,7 @@ class StoreController extends Controller
 {
     public function index()
     {
-        $products = Product::where('status', 'Active')->get();
+        $products = Product::where('status', 'In Stock')->get();
 
         return view('store.index', compact('products'));
     }

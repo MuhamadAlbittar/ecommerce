@@ -103,10 +103,10 @@
                                                           <td>{{ $product->sku ?? '-' }}</td>
 
                                                           <td>
-                                                                @if (strtolower($product->status) == 'active')
-                                                                    <span class="status-badge status-success">Active</span>
+                                                                @if (($product->status) == 'In Stock')
+                                                                    <span class="status-badge status-success">In Stock</span>
                                                                 @else
-                                                                    <span class="status-badge status-danger">Inactive</span>
+                                                                    <span class="status-badge status-danger">Out of Stock</span>
                                                                 @endif
                                                          </td>
 
@@ -128,8 +128,8 @@
                                                                         <form action="{{ route('products.update', $product->id) }}" method="POST">
                                                                             @csrf
                                                                             @method('PUT')
-                                                                            <input type="hidden" name="status" value="Active">
-                                                                            <button class="dropdown-item">Active</button>
+                                                                            <input type="hidden" name="status" value="In Stock">
+                                                                            <button class="dropdown-item">In Stock</button>
                                                                         </form>
                                                                     </li>
 
@@ -137,8 +137,8 @@
                                                                         <form action="{{ route('products.update', $product->id) }}" method="POST">
                                                                             @csrf
                                                                             @method('PUT')
-                                                                            <input type="hidden" name="status" value="Inactive">
-                                                                            <button class="dropdown-item">Inactive</button>
+                                                                            <input type="hidden" name="status" value="Out of Stock">
+                                                                            <button class="dropdown-item">Out of Stock</button>
                                                                         </form>
                                                                     </li>
                                                                 </ul>

@@ -26,7 +26,7 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id')->nullable();
             $table->string('tags')->nullable();
 
-            $table->enum('status', ['Active', 'Inactive'])->default('Active');
+            $table->enum('status', ['In Stock', 'Out of Stock'])->default('In Stock');
 
             $table->timestamps();
         });

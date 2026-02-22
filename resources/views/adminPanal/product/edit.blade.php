@@ -47,8 +47,8 @@
                                             id="status" 
                                             class="form-select @error('status') is-invalid @enderror"
                                         >
-                                            <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
-                                            <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                            <option value="In Stock" {{ old('status') == 'In Stock' ? 'selected' : '' }}>In Stock</option>
+                                            <option value="Out of Stock" {{ old('status') == 'Out of Stock' ? 'selected' : '' }}>Out of Stock</option>
                                         </select>
 
                                         @error('status')

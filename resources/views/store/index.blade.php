@@ -3,7 +3,7 @@
 @section('content')
 
 <h2 class="text-center mb-5" style="font-size: 32px; font-weight: 600; color:#333;">
-    our products
+    {{-- our products --}}
 </h2>
 
 <div class="row">
