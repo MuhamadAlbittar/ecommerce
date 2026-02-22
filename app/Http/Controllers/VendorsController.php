@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Vendor;
-use App\Models\user;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\Vendor\StoreVendorRequest;
 use App\Http\Requests\Vendor\UpdateVendorRequest;
@@ -16,8 +16,7 @@ class VendorsController extends Controller
      */
     public function index()
     {
-        
-        $vendors = Vendor::with('users')->get();
+        $vendors = Vendor::all();
         return view('adminpanal.vendors.index', compact('vendors'));
     }
 
@@ -26,7 +25,7 @@ class VendorsController extends Controller
      */
     public function create()
     {
-        return view('vendors.create');
+        return view('adminpanal.vendors.add');
     }
 
     /**
@@ -35,13 +34,12 @@ class VendorsController extends Controller
    public function store(StoreVendorRequest $request)
     {
         $data = $request->validated();
-
-        if ($request->hasFile('logo')) {
-            $data['logo'] = $request->file('logo')->store('vendors','public');
-        }
-
-        Vendor::create($data);
-
+        $vendor = Vendor::create($data);
+        // $vendor->addMedia($vendor->image)->toMediaCollection('image');
+       if ($request->hasFile('image')) {
+           $vendor->addMediaFromRequest('image')->toMediaCollection('vendor-logo');
+       }
+        // dd($data);
         return redirect()->route('vendors.index')
             ->with('success','Vendor created');
     }
@@ -49,17 +47,17 @@ class VendorsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Vendor $vendor)
-    {
-        return view('vendors.show', compact('vendor'));
-    }
+    // public function show(Vendor $vendor)
+    // {
+    //     return view('adminpanal.vendors.show', compact('vendor'));
+    // }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(Vendor $vendor)
     {
-        return view('vendors.edit', compact('vendor'));
+        return view('adminpanal.vendors.edit', compact('vendor'));
     }
 
 
@@ -68,18 +66,14 @@ class VendorsController extends Controller
      */
     public function update(UpdateVendorRequest $request, Vendor $vendor)
     {
-        $request->validate([
+         $data = $request->validated();
 
-        ]);
+         $vendor->update($data);
 
-        $data = $request->only(['name','description','status']);
-
-        if ($request->hasFile('logo')) {
-            $data['logo'] = $request->file('logo')->store('vendors','public');
-        }
-
-        $vendor->update($data);
-
+       if ($request->hasFile('image')) {
+           $vendor->clearMediaCollection('image')->addMediaFromRequest('image')->toMediaCollection('vendor-logo');
+       }
+    //    dd($data);
         return redirect()->route('vendors.index')
             ->with('success','Vendor updated');
     }

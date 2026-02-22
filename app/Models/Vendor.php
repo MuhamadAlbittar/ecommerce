@@ -3,10 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Vendor extends Model
+class Vendor extends Model implements HasMedia
 {
+    use InteractsWithMedia;
     use HasFactory;
     protected $table = 'vendors';
 
@@ -28,9 +33,6 @@ class Vendor extends Model
     {
         return $this->hasMany(VendorUser::class);
     }
-
-
-
 
     public function vendorProducts()
     {
@@ -60,5 +62,10 @@ class Vendor extends Model
     public function shippingMethods()
     {
         return $this->belongsToMany(ShippingMethod::class, 'vendor_shipping_methods');
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('logo')->useDisk('public');
     }
 }
