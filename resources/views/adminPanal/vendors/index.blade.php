@@ -17,6 +17,7 @@
                                 <thead>
                                     <tr>
                                         <th scope="col" class="py-3">ID</th>
+                                        <th scope="col" class="py-3">Image</th>
                                         <th scope="col" class="py-3">Name</th>
                                         <th scope="col" class="py-3">Email</th>
                                         <th scope="col" class="py-3">Phone</th>
@@ -28,25 +29,28 @@
                                 <tbody>
                                     @foreach ($vendors as $vendor)
                                     <tr>
-                                        <td>#{{ $vendor->id }}</td>
+                                        <td>{{ $vendor->id }}</td>
+                                        <td><img src="{{ $vendor->getFirstMediaUrl('vendor-logo') }}" alt="Vendor Image" class="img-fluid" width="100"></td>
                                         <td>{{ $vendor->name }}</td>
-                                        <td>@foreach($vendor->users as $user)
-                                                {{ $user->email }}<br>
-                                            @endforeach</td>
+                                        <td>{{ $vendor->email }}</td>
                                         <td>{{ $vendor->phone }}</td>
                                         <td>{{ $vendor->created_at->format('d M, Y g:i A') }}</td>
-                                        <td>{{ $vendor->status }}</td>
+                                        <td>{{ $vendor->status ? 'Active' : 'Inactive' }}</td>
                                         <td class="d-flex">
-                                            <a href="#" class="btn btn-sm"><i class="fa-solid fa-edit"></i></a>
-                                            <a href="#" class="btn btn-sm"><i class="fa-solid fa-trash"></i></a>
-                                            <div class="dropdown">
+                                            <a href="{{route('vendors.edit', $vendor->id)}}" class="btn btn-sm"><i class="fa-solid fa-edit" style="color:green"></i></a>
+                                            <form action="{{ route('vendors.destroy', $vendor->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm" onclick="return confirm('Are you sure you want to delete this vendor?')"><i class="fa-solid fa-trash" style="color:red"></i></button>
+                                            </form>
+                                            {{-- <div class="dropdown">
                                                 <a class="nav-link px-3 pt-1 pb-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="fa-solid fa-ellipsis-vertical"></i>
                                                 </a>
                                                 <ul class="dropdown-menu">
                                                     <li><a class="dropdown-item py-2" href="#">Block</a></li>
                                                 </ul>
-                                            </div>
+                                            </div> --}}
                                         </td>
                                     </tr>
                                     @endforeach

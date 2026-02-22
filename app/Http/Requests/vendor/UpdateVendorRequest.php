@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\vendor;
+namespace App\Http\Requests\Vendor;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -22,7 +22,9 @@ class UpdateVendorRequest extends FormRequest
     public function rules(): array
     {
         return [
-                'name' => 'required|string|max:255|unique:vendors,name',
+                'name' => 'required|string|max:255,name',
+                'email' => 'required|string|email|max:255,email',
+                'phone' => 'required|string|max:20,phone',
                 'description' => 'nullable|string|max:1000',
                 'status' => 'required|boolean',
                 'logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
@@ -33,6 +35,13 @@ class UpdateVendorRequest extends FormRequest
     return [
         'name.required' => 'اسم البائع مطلوب',
         'name.max' => 'اسم البائع يجب ألا يتجاوز 255 حرف',
+        'name.unique' => 'اسم البائع مستخدم بالفعل',
+        'email.required' => 'البريد الإلكتروني مطلوب',
+        'email.email' => 'البريد الإلكتروني غير صالح',
+        'email.max' => 'البريد الإلكتروني يجب ألا يتجاوز 255 حرف',
+        'email.unique' => 'البريد الإلكتروني مستخدم بالفعل',
+        'phone.required' => 'رقم الهاتف مطلوب',
+        'phone.max' => 'رقم الهاتف يجب ألا يتجاوز 20 حرف',
 
         'description.string' => 'الوصف يجب أن يكون نص',
 
@@ -42,4 +51,5 @@ class UpdateVendorRequest extends FormRequest
         'logo.image' => 'الملف يجب أن يكون صورة',
         'logo.max' => 'حجم الصورة يجب ألا يتجاوز 2MB',
     ];
+}
 }
