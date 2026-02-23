@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="main-content">
-                <div class="extra-header"></div>
+     <div class="extra-header"></div>
                 <div class="card-service-section px-0 px-md-0 px-lg-3">
                     <div class="container-fluid">
                         <div class="d-flex justify-content-between align-items-center bg-teal">
@@ -85,7 +85,7 @@
 
                                                           <td>
                                                               @if($product->image)
-                                                                  <img src="{{ asset('uploads/products/' . $product->image) }}" 
+                                                                  <img src="{{ asset('uploads/products/' . $product->image) }}"
                                                                       alt="Product Image" class="p-img-thumbnail">
                                                               @else
                                                                   <span>No Image</span>
