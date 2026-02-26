@@ -1,8 +1,8 @@
        <div class="sidebar">
                <div class="collapse-sidebar d-none d-lg-block"><span><i class="fa-solid fa-chevron-left"></i></span></div>
                <div class="sidebar-header">
-                   <div class="lg-logo"><a href="{{ route('home') }}"><img src="{{ asset('adminPanal/images/logo.png') }}" alt="logo large"></a></div>
-                   <div class="sm-logo"><a href="{{ route('home') }}"><img src="{{ asset('adminPanal/images/sm-logo.png') }}" alt="logo small"></a></div>
+                   <div class="lg-logo"><a href="{{'home'}}"><img src="{{ asset('adminPanal/images/logo.png') }}" alt="logo large"></a></div>
+                   <div class="sm-logo"><a href="{{'home'}}"><img src="{{ asset('adminPanal/images/sm-logo.png') }}" alt="logo small"></a></div>
                </div>
                <div class="sidebar-body  custom-scrollbar">
                     <ul class="sidebar-menu">

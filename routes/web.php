@@ -75,7 +75,7 @@ Route::get('/cart/clear', [\App\Http\Controllers\CartController::class, 'clear']
 
 Route::get('/home', function () {
     return view('store.index');
-})->name('home');
+});// ->name('home');
 
 
 
