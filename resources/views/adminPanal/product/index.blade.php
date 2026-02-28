@@ -68,6 +68,7 @@
                                                   <th scope="col" class="py-3">Product ID</th>
                                                   <th scope="col" class="py-3">Image</th>
                                                   <th scope="col" class="py-3">Product Name</th>
+                                                  <th scope="col" class="py-3">Vendor</th>
                                                   <th scope="col" class="py-3">Category</th>
                                                   <th scope="col" class="py-3">Price</th>
                                                   <th scope="col" class="py-3">Stock</th>
@@ -94,7 +95,15 @@
 
                                                           <td>{{ $product->name }}</td>
 
-                                                          <td>{{ $product->category->name ?? 'No Category' }}</td>
+                                                          <td>{{ $product->vendor ?? 'No Vendor' }}</td>
+
+                                                          <td>
+                                                            @if($product->categories->count())
+                                                                {{ $product->categories->pluck('name')->join(', ') }}
+                                                            @else
+                                                                No Category
+                                                            @endif
+                                                        </td>
 
                                                           <td>{{ $product->price }}</td>
 

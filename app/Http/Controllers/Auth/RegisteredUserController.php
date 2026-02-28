@@ -19,7 +19,7 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        return view('store.register');
     }
 
     /**
@@ -37,6 +37,6 @@ public function store(StoreUserRequest $request)
         event(new Registered($user));
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('store.index', absolute: false));
     }
 }

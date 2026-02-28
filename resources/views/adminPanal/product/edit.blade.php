@@ -36,7 +36,19 @@
 
                                     <div class="col-md-6">
                                         <label class="form-label">Vendor</label>
-                                        <input type="text" class="form-control" name="vendor" value="{{ $product->vendor }}">
+                                        <select name="vendor" class="form-select @error('vendor') is-invalid @enderror">
+                                            <option value="">Select Vendor</option>
+                                            @foreach($vendors as $vendor)
+                                                <option value="{{ $vendor->name }}" 
+                                                    {{ old('vendor') == $vendor->name ? 'selected' : '' }}>
+                                                    {{ $vendor->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+
+                                        @error('vendor')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     {{-- 🔥 حالة المنتج --}}
@@ -132,11 +144,11 @@
 
                                     <div class="col-md-12">
                                         <label class="form-label">Category</label>
-                                        <select class="form-select" name="category_id">
-                                            @foreach($categories as $cat)
-                                                <option value="{{ $cat->id }}" 
-                                                    {{ $product->category_id == $cat->id ? 'selected' : '' }}>
-                                                    {{ $cat->name }}
+                                        <select name="category_id[]" class="form-select" multiple>
+                                            @foreach($categories as $category)
+                                                <option value="{{ $category->id }}"
+                                                    {{ in_array($category->id, old('category_id', [])) ? 'selected' : '' }}>
+                                                    {{ $category->name }}
                                                 </option>
                                             @endforeach
                                         </select>
