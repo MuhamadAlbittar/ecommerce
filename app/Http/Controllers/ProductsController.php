@@ -1,0 +1,158 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Product;
+use App\Models\Category;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
+use App\Models\User;
+use App\Models\Vendor;
+
+
+class ProductsController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $products = Product::with('categories')->get();
+        $categories = Category ::all();
+        return view('adminPanal.product.index', compact ('products', 'categories')) ;
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        // $vendors = User::where('role', 'vendor_user')->get(); // جلب جميع البائعين
+        $vendors = Vendor::all(); // جلب جميع البائعين
+        $categories = Category::all();
+        return view('adminPanal.product.addList', compact('vendors', 'categories'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+        {
+            
+            // 1) التحقق من البيانات
+            $validated = $request->validate([
+                'name'        => 'required|string|max:255',
+                'product_id'  => 'nullable|string',
+                'sku'         => 'nullable|string',
+                'vendor'      => 'required|string',
+                'description' => 'nullable|string',
+                // 'category_id' => 'nullable|exists:categories,id',
+                'category_id' => 'required|array',
+                'category_id.*' => 'exists:categories,id',
+                'price'       => 'required|numeric',
+                'sale_price'  => 'nullable|numeric',
+                'tags'        => 'nullable|string',
+                'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+                'status'      => 'nullable|string|in:In Stock,Out of Stock'
+            ]);
+            
+
+            // 2) رفع الصورة إذا موجودة
+            if ($request->hasFile('image')) {
+                $imageName = time() . '.' . $request->image->extension();
+                $request->image->move(public_path('uploads/products'), $imageName);
+
+                // إضافة اسم الصورة للمصفوفة
+                $validated['image'] = $imageName;
+            }
+
+            // 3) إنشاء المنتج
+            $product = Product::create(collect($validated)->except('category_id')->toArray());
+            // ربط الفئات
+            $product->categories()->sync($validated['category_id']);
+            
+            // 4) إعادة التوجيه
+            return redirect()->route('products.index')->with('success', 'تم اضافة المنتج بنجاح');
+        }
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id)
+    {
+        $product = Product::findOrFail($id);
+        // $vendors = User::where('role', 'vendor_user')->get(); // جلب جميع البائعين
+        $vendors = Vendor::all(); // جلب جميع البائعين
+        $categories = Category::all();
+
+
+        return view('adminPanal.product.edit', compact('product', 'vendors', 'categories'));
+    }
+    /**
+     * Update the specified resource in storage.
+     */
+    
+        public function update(Request $request, $id)
+        {
+            // 1) Get product
+            $product = Product::findOrFail($id);
+
+            // 2) Validation
+            $validated = $request->validate([
+                'name'        => 'sometimes|required|string|max:255',
+                'product_id'  => 'nullable|string',
+                'sku'         => 'nullable|string',
+                'vendor'      => 'required|string',
+                'description' => 'nullable|string',
+                // 'category_id' => 'nullable|exists:categories,id',
+                'category_id' => 'required|array',
+                'category_id.*' => 'exists:categories,id',
+                'price'       => 'sometimes|required|numeric',
+                'sale_price'  => 'nullable|numeric',
+                'tags'        => 'nullable|string',
+                'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+                'status'      => 'sometimes|required|string|in:In Stock,Out of Stock',
+            ]);
+            // 3) Handle image upload
+            if ($request->hasFile('image')) {
+                $imageName = time() . '.' . $request->image->extension();
+                $request->image->move(public_path('uploads/products'), $imageName);
+                $validated['image'] = $imageName;
+            }
+            // 4) Update product
+            $product->update(collect($validated)->except('category_id')->toArray());
+            // ربط الفئات
+            $product->categories()->sync($validated['category_id']);
+
+
+            return redirect()->route('products.index')->with('success', 'تم تحديث المنتج بنجاح');
+        }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
+
+        // حذف الصورة إذا موجودة
+        if ($product->image && file_exists(public_path('uploads/products/' . $product->image))) {
+            unlink(public_path('uploads/products/' . $product->image));
+        }
+
+        // حذف المنتج
+        $product->delete();
+
+        return redirect()->route('products.index')->with('success', 'تم حذف المنتج بنجاح');
+    }
+}
