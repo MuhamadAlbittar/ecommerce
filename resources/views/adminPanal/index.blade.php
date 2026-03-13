@@ -11,7 +11,7 @@
                                         <div class="row">
                                                 <div class="col-10">
                                                     <h6 class="text-muted mb-2">Today's Revenue</h6>
-                                                    <h3 class="fw-bold">₹15,00,000</h3>
+                                                   <h3 class="fw-bold">${{ number_format($todayRevenue, 2) }}</h3>
                                                     <div class="d-flex align-items-center">
                                                         <span class="status-badge status-success">
                                                             <i class="fa-solid fa-arrow-up"></i> 4.8%
@@ -32,7 +32,7 @@
                                         <div class="row">
                                                 <div class="col-10">
                                                     <h6 class="text-muted mb-2">Today's Orders</h6>
-                                                    <h3 class="fw-bold">7,506</h3>
+                                                    <h3 class="fw-bold">{{ $todayOrders }}</h3>
                                                     <div class="d-flex align-items-center">
                                                     <span class="status-badge status-danger">
                                                         <i class="fa-solid fa-arrow-down"></i> 4.8%
@@ -53,7 +53,7 @@
                                         <div class="row">
                                                 <div class="col-10">
                                                     <h6 class="text-muted mb-2">Today's Visitors</h6>
-                                                    <h3 class="fw-bold">36,524</h3>
+                                                   <h3 class="fw-bold">{{ $totalUsers }}</h3>
                                                     <div class="d-flex align-items-center">
                                                     <span class="status-badge status-success">
                                                         <i class="fa-solid fa-arrow-up"></i> 4.8%
@@ -192,4 +192,42 @@
                     </div>
                 </div>
            </div>
+           {{-- Latest Orders Table --}}
+<div class="px-0 px-md-0 px-lg-3 mt-4">
+    <div class="container-fluid">
+        <div class="card shadow-sm border-0 border-radius-12">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between mb-3">
+                    <h6 class="fw-bold">Latest Orders</h6>
+                    <a href="{{ route('orders.index') }}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($latestOrders as $order)
+                        <tr>
+                            <td>#{{ $order->id }}</td>
+                            <td>{{ $order->user->name ?? 'Guest' }}</td>
+                            <td class="fw-semibold">${{ number_format($order->total_price ?? 0, 2) }}</td>
+                            <td>
+                                @php
+                                    $c = ['pending'=>'warning','processing'=>'info','shipped'=>'primary','delivered'=>'success','cancelled'=>'danger'];
+                                @endphp
+                                <span class="badge bg-{{ $c[$order->status] ?? 'secondary' }} text-capitalize">
+                                    {{ $order->status }}
+                                </span>
+                            </td>
+                            <td>{{ $order->created_at->format('M d, Y') }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

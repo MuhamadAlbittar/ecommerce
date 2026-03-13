@@ -1,4 +1,6 @@
 <?php
+use App\Http\Controllers\DashboardController;
+
 use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -79,6 +81,7 @@ Route::get('/cart/add/{id}', [\App\Http\Controllers\CartItemsController::class, 
 Route::get('/cart/remove/{id}', [\App\Http\Controllers\CartItemsController::class, 'remove'])->name('cart.remove');
 Route::get('/cart/clear', [\App\Http\Controllers\CartsController::class, 'clear'])->name('cart.clear');
 Route::get('/track', [\App\Http\Controllers\OrdersController::class, 'track'])->name('orders.track');
+Route::get('/admin', [DashboardController::class, 'index'])->name('admin.dashboard');
 
 
 
