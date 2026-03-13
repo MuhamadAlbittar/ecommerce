@@ -7,22 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class UserAddress extends Model
 {
     protected $fillable = [
-        'user_id',
-        'full_name',
-        'phone',
-        'country',
-        'city',
-        'street',
-        'building',
-        'notes',
-        'is_default',
+        'user_id', 'label', 'full_name', 'phone',
+        'address', 'city', 'state', 'postal_code',
+        'country', 'is_default',
     ];
 
-    /* -------------------------
-        Relationships
-    --------------------------*/
+    protected $casts = [
+        'is_default' => 'boolean',
+    ];
 
-    // UserAddress → User (N:1)
     public function user()
     {
         return $this->belongsTo(User::class);
