@@ -78,6 +78,9 @@ Route::get('/cart', [\App\Http\Controllers\CartsController::class, 'index'])->na
 Route::get('/cart/add/{id}', [\App\Http\Controllers\CartItemsController::class, 'add'])->name('cart.add');
 Route::get('/cart/remove/{id}', [\App\Http\Controllers\CartItemsController::class, 'remove'])->name('cart.remove');
 Route::get('/cart/clear', [\App\Http\Controllers\CartsController::class, 'clear'])->name('cart.clear');
+Route::get('/track', [\App\Http\Controllers\OrdersController::class, 'track'])->name('orders.track');
+
+
 
 // Route::get('/home', function () {
 //     return view('store.index');
