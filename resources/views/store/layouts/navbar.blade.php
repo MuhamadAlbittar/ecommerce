@@ -28,7 +28,7 @@
                                     Shop
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown_1">
-                                    <a class="dropdown-item" href="{{ route('store.category') }}">
+                                    <a class="dropdown-item" href="#{{--route('store.category')--}}">
                                         <i class="fas fa-th-large me-2"></i>Shop Category
                                     </a>
                                 </div>
@@ -41,13 +41,13 @@
                                     Pages
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown_3">
-                                    <a class="dropdown-item" href="{{ route('store.tracking') }}">
+                                    <a class="dropdown-item" href="#{{--route('store.tracking')--}}">
                                         <i class="fas fa-truck me-2"></i>Order Tracking
                                     </a>
-                                    <a class="dropdown-item" href="{{ route('store.checkout') }}">
+                                    <a class="dropdown-item" href="#{{--route('store.checkout')--}}">
                                         <i class="fas fa-credit-card me-2"></i>Checkout
                                     </a>
-                                    <a class="dropdown-item" href="{{ route('store.cart') }}">
+                                    <a class="dropdown-item" href="#{{--route('store.cart')--}}">
                                         <i class="fas fa-shopping-cart me-2"></i>Shopping Cart
                                     </a>
                                 </div>
@@ -60,7 +60,7 @@
                                     Blog
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown_2">
-                                    <a class="dropdown-item" href="{{ route('store.blog') }}">
+                                    <a class="dropdown-item" href="#{{--route('store.blog')--}}">
                                         <i class="fas fa-blog me-2"></i>Blog
                                     </a>
                                 </div>
@@ -69,7 +69,7 @@
                             {{-- Contact --}}
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('store.contact') ? 'active' : '' }}"
-                                   href="{{ route('store.contact') }}">Contact</a>
+                                   href="#{{--route('store.contact')--}}">Contact</a>
                             </li>
 
                         </ul>
@@ -84,7 +84,7 @@
                         </a>
 
                         {{-- Cart --}}
-                        <a href="{{ route('store.cart') }}" class="position-relative">
+                        <a href="#{{--route('store.cart')--}}" class="position-relative">
                             <i class="fas fa-cart-plus"></i>
                             @auth
                                 @php
@@ -105,11 +105,11 @@
                         {{-- ===== Auth Section ===== --}}
                         @guest
                             {{-- زائر: Login / Register --}}
-                            <a href="{{ route('login') }}"
+                            <a href="#{{--route('login')--}}"
                                class="btn btn-sm btn-outline-dark px-3 ms-2">
                                 <i class="fas fa-sign-in-alt me-1"></i>Login
                             </a>
-                            <a href="{{ route('register') }}"
+                            <a href="#{{--route('register')--}}"
                                class="btn btn-sm btn-dark px-3">
                                 <i class="fas fa-user-plus me-1"></i>Register
                             </a>
@@ -142,22 +142,22 @@
                                     </div>
 
                                     {{-- Links --}}
-                                    <a class="dropdown-item py-2" href="{{ route('addresses.index') }}">
+                                    <a class="dropdown-item py-2" href="#{{--route('addresses.index')--}}">
                                         <i class="fas fa-map-marker-alt me-2 text-muted"></i>My Addresses
                                     </a>
 
-                                    <a class="dropdown-item py-2" href="{{ route('store.tracking') }}">
+                                    <a class="dropdown-item py-2" href="#{{--route('store.tracking')--}}">
                                         <i class="fas fa-truck me-2 text-muted"></i>Track My Orders
                                     </a>
 
-                                    <a class="dropdown-item py-2" href="{{ route('store.cart') }}">
+                                    <a class="dropdown-item py-2" href="#{{--route('store.cart')--}}">
                                         <i class="fas fa-shopping-cart me-2 text-muted"></i>My Cart
                                     </a>
 
                                     <div class="dropdown-divider"></div>
 
                                     {{-- Logout --}}
-                                    <form method="POST" action="{{ route('logout') }}">
+                                    <form method="POST" action="#{{--route('logout')--}}">
                                         @csrf
                                         <button type="submit" class="dropdown-item py-2 text-danger">
                                             <i class="fas fa-sign-out-alt me-2"></i>Logout
@@ -177,7 +177,7 @@
     <div class="search_input" id="search_input_box">
         <div class="container">
             <form class="d-flex justify-content-between search-inner"
-                  action="{{ route('store.category') }}" method="GET">
+                  action="#{{--route('store.category')--}}" method="GET">
                 <input type="text" name="search" class="form-control"
                        id="search_input" placeholder="Search products...">
                 <button type="submit" class="btn"></button>
