@@ -4,9 +4,9 @@
         <div class="flex justify-between h-16">
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     {{--store icon--}}
-                    <a href="{{ route('store.index') }}" class="text-gray-700 text-xl" title="الانتقال إلى المتجر">
+                    <x-nav-link href="{{ route('store.index') }}" class="text-white text-xl" title="الانتقال إلى المتجر">
                         <i class="fa-solid fa-store"></i>
-                    </a>
+                    </x-nav-link>
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>

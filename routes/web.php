@@ -1,5 +1,6 @@
 <?php
-
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
@@ -7,6 +8,7 @@ use App\Http\Controllers\{
     OrderItemsController,
     OrderVendorsController,
     OrderShipmentsController,
+    CartController,
     CartsController,
     CartItemsController,
     ProductsController,
@@ -20,7 +22,8 @@ use App\Http\Controllers\{
     RefundsController,
     RefundItemsController,
     ShippingMethodsController,
-    VendorShippingMethodsController
+    VendorShippingMethodsController,
+    StoreController
 };
 
 Route::get('/', function () {
@@ -35,7 +38,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+// User Addresses
+Route::resource('addresses', UserAddressController::class)->except(['show']);
+Route::post('addresses/{address}/set-default', [UserAddressController::class, 'setDefault'])
+     ->name('addresses.setDefault');
+    });
 
 require __DIR__.'/auth.php';
 Route::resources([
@@ -45,6 +52,7 @@ Route::resources([
     'order-shipments' => OrderShipmentsController::class,
 
     'carts' => CartsController::class,
+    'cart' => CartController::class,
     'cart-items' => CartItemsController::class,
 
     'products' => ProductsController::class,
@@ -64,18 +72,25 @@ Route::resources([
 
     'shipping-methods' => ShippingMethodsController::class,
     'vendor-shipping-methods' => VendorShippingMethodsController::class,
+
+    // 'store' => StoreController::class,
+
 ]);
 // Storefront
-Route::get('/store', [\App\Http\Controllers\StoreController::class, 'index'])->name('store.index');
+Route::get('/home', [\App\Http\Controllers\StoreController::class, 'index'])->name('store.index');
 // Cart
-Route::get('/cart', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add/{id}', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
-Route::get('/cart/remove/{id}', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
-Route::get('/cart/clear', [\App\Http\Controllers\CartController::class, 'clear'])->name('cart.clear');
+Route::get('/cart', [\App\Http\Controllers\CartsController::class, 'index'])->name('cart.index');
+Route::get('/cart/add/{id}', [\App\Http\Controllers\CartItemsController::class, 'add'])->name('cart.add');
+Route::get('/cart/remove/{id}', [\App\Http\Controllers\CartItemsController::class, 'remove'])->name('cart.remove');
+Route::get('/cart/clear', [\App\Http\Controllers\CartsController::class, 'clear'])->name('cart.clear');
+Route::get('/track', [\App\Http\Controllers\OrdersController::class, 'track'])->name('orders.track');
+Route::get('/admin', [DashboardController::class, 'index'])->name('admin.dashboard');
 
-Route::get('/home', function () {
-    return view('store.index');
-});// ->name('home');
+
+
+// Route::get('/home', function () {
+//     return view('store.index');
+// })->name('home');
 
 
 

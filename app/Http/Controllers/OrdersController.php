@@ -73,4 +73,25 @@ class OrdersController extends Controller
     {
         //
     }
+    public function track(Request $request)
+{
+    $order = null;
+    $error = null;
+
+    if ($request->filled('order_id')) {
+        $order = \App\Models\Order::with([
+            'orderItems.product',
+            'orderShipments.shippingMethod',
+            'orderVendors',
+        ])->where('id', $request->order_id)
+          ->where('user_id', auth()->id())
+          ->first();
+
+        if (!$order) {
+            $error = 'Order not found. Please check the order number.';
+        }
+    }
+
+    return view('store.tracking', compact('order', 'error'));
+}
 }

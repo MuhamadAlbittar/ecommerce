@@ -9,6 +9,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
+use App\Models\User;
+use App\Models\Vendor;
+
 
 class ProductsController extends Controller
 {
@@ -17,7 +20,7 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products = Product ::all();
+        $products = Product::with('categories')->get();
         $categories = Category ::all();
         return view('adminPanal.product.index', compact ('products', 'categories')) ;
     }
@@ -27,8 +30,10 @@ class ProductsController extends Controller
      */
     public function create()
     {
+        // $vendors = User::where('role', 'vendor_user')->get(); // جلب جميع البائعين
+        $vendors = Vendor::all(); // جلب جميع البائعين
         $categories = Category::all();
-        return view('adminPanal.product.addList', compact('categories'));
+        return view('adminPanal.product.addList', compact('vendors', 'categories'));
     }
 
     /**
@@ -36,20 +41,24 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
         {
+            
             // 1) التحقق من البيانات
             $validated = $request->validate([
                 'name'        => 'required|string|max:255',
                 'product_id'  => 'nullable|string',
                 'sku'         => 'nullable|string',
-                'vendor'      => 'nullable|string',
+                'vendor'      => 'required|string',
                 'description' => 'nullable|string',
-                'category_id' => 'nullable|exists:categories,id',
+                // 'category_id' => 'nullable|exists:categories,id',
+                'category_id' => 'required|array',
+                'category_id.*' => 'exists:categories,id',
                 'price'       => 'required|numeric',
                 'sale_price'  => 'nullable|numeric',
                 'tags'        => 'nullable|string',
                 'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
                 'status'      => 'nullable|string|in:In Stock,Out of Stock'
             ]);
+            
 
             // 2) رفع الصورة إذا موجودة
             if ($request->hasFile('image')) {
@@ -61,14 +70,15 @@ class ProductsController extends Controller
             }
 
             // 3) إنشاء المنتج
-            Product::create($validated);
-
+            $product = Product::create(collect($validated)->except('category_id')->toArray());
+            // ربط الفئات
+            $product->categories()->sync($validated['category_id']);
+            
             // 4) إعادة التوجيه
             return redirect()->route('products.index')->with('success', 'تم اضافة المنتج بنجاح');
         }
     /**
      * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
@@ -80,9 +90,12 @@ class ProductsController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
+        // $vendors = User::where('role', 'vendor_user')->get(); // جلب جميع البائعين
+        $vendors = Vendor::all(); // جلب جميع البائعين
         $categories = Category::all();
 
-        return view('adminPanal.product.edit', compact('product', 'categories'));
+
+        return view('adminPanal.product.edit', compact('product', 'vendors', 'categories'));
     }
     /**
      * Update the specified resource in storage.
@@ -98,9 +111,11 @@ class ProductsController extends Controller
                 'name'        => 'sometimes|required|string|max:255',
                 'product_id'  => 'nullable|string',
                 'sku'         => 'nullable|string',
-                'vendor'      => 'nullable|string',
+                'vendor'      => 'required|string',
                 'description' => 'nullable|string',
-                'category_id' => 'nullable|exists:categories,id',
+                // 'category_id' => 'nullable|exists:categories,id',
+                'category_id' => 'required|array',
+                'category_id.*' => 'exists:categories,id',
                 'price'       => 'sometimes|required|numeric',
                 'sale_price'  => 'nullable|numeric',
                 'tags'        => 'nullable|string',
@@ -114,7 +129,10 @@ class ProductsController extends Controller
                 $validated['image'] = $imageName;
             }
             // 4) Update product
-            $product->update($validated);
+            $product->update(collect($validated)->except('category_id')->toArray());
+            // ربط الفئات
+            $product->categories()->sync($validated['category_id']);
+
 
             return redirect()->route('products.index')->with('success', 'تم تحديث المنتج بنجاح');
         }
