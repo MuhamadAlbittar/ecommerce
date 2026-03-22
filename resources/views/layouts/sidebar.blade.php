@@ -8,20 +8,31 @@
                     <ul class="sidebar-menu">
                         <li class="sidebar-label">Menu</li>
                         <li><a href="index.html" class="text-black sidebar-link active"><i class="fa-solid fa-house"></i><p>Dashboard</p></a></li>
+                         @if (auth()->user()->role !== 'customer')
+                        <li><a href="{{ route('sellers.index') }}" class="text-black sidebar-link">
+                            <i class="fa-regular fa-user"></i><p>sellers</p></a></li>
+                        @endif
+
+
+
+
+                        @if(auth()->user()->role === 'seller')
+                        <li><a href="user-list.html" class="text-black sidebar-link"><i class="fa-regular fa-user"></i><p>Customers</p></a></li>
+
+                        <li><a href="{{ route('vendors.index') }}" class="text-black sidebar-link">
+                            <i class="fa-regular fa-store"></i><p>vendors</p></a></li>
                         <li><a href="#" class="text-black sidebar-link submenu-parent"><i class="fa-solid fa-list"></i><p>Category <i class="fa-solid fa-angle-down right-icon"></i></p></a>
                             <ul class="sidebar-submenu">
                                 <li><a href="{{ route('categories.create') }}" class="submenu-link">Add</a></li>
                                 <li><a href="{{ route('categories.index') }}" class="submenu-link">List</a></li>
                             </ul>
                         </li>
-
                         <li><a href="#" class="text-black sidebar-link submenu-parent"><i class="fa-brands fa-microsoft"></i><p>Products <i class="fa-solid fa-angle-down right-icon"></i></p></a>
                             <ul class="sidebar-submenu">
                                 <li><a href="{{ route('products.create') }}" class="submenu-link">Add</a></li>
                                 <li><a href="{{ route('products.index') }}" class="submenu-link">List</a></li>
                             </ul>
                         </li>
-
                         <li><a href="#" class="text-black sidebar-link submenu-parent"><i class="fa-solid fa-bucket"></i><p>Order <i class="fa-solid fa-angle-down right-icon"></i></p></a>
                             <ul class="sidebar-submenu">
                                 <li><a href="{{ route('orders.index') }}" class="submenu-link">List</a></li>
@@ -29,28 +40,11 @@
                                 <li><a href="{{ route('orders.create') }}" class="submenu-link">Invoice</a></li>{{--{{ route('orders.invoice', 1) }}--}}
                             </ul>
                         </li>
-                          <li><a href="#" class="text-black sidebar-link submenu-parent"><i class="fa-regular fa-user"></i><p>vendors<i class="fa-solid fa-angle-down right-icon"></i></p></a>
-                            <ul class="sidebar-submenu">
-                                <li><a href="{{ route('vendors.create') }}" class="submenu-link">Add</a></li>
-                                <li><a href="{{ route('vendors.index') }}" class="submenu-link">List</a></li>
-                            </ul>
-                        </li>
-
-
-                        <li><a href="user-list.html" class="text-black sidebar-link"><i class="fa-regular fa-user"></i><p>Customers</p></a></li>
-                        <li><a href="#" class="text-black sidebar-link submenu-parent"><i class="fa-solid fa-pager"></i><p>Page <i class="fa-solid fa-angle-down right-icon"></i></p></a>
-                            <ul class="sidebar-submenu">
-                                <li><a href="{{route('login')}}" class="submenu-link">Login</a></li>
-                                <li><a href="{{route('register')}}" class="submenu-link">Signup</a></li>
-                                <li><a href="{{route('password.request')}}" class="submenu-link">Forgot Password</a></li>
-                            </ul>
-                        </li>
                         <li>
                             <a href="#" class="text-black sidebar-link submenu-parent">
                                 <i class="fa-solid fa-credit-card"></i>
                                 <p>Payment Methods <i class="fa-solid fa-angle-down right-icon"></i></p>
                             </a>
-
                             <ul class="sidebar-submenu">
                                 <li><a href="{{ route('payment-methods.create') }}" class="submenu-link">Add</a></li>
                                 <li><a href="{{ route('payment-methods.index') }}" class="submenu-link">List</a></li>
@@ -67,9 +61,8 @@
                                 <li><a href="{{ route('shipping-methods.index') }}" class="submenu-link">List</a></li>
                             </ul>
                         </li>
+                        @endif
 
-
-                        <li class="sidebar-label">Other</li>
 
                         <li><a href="#" class="text-black sidebar-link"><i class="fa-regular fa-message"></i><p>Message</p></a></li>
                         <li><a href="#" class="text-black sidebar-link"><i class="fa-solid fa-phone"></i><p>Help & Support</p></a></li>

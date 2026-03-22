@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class VendorUser extends Model
+// use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+class VendorUser extends Pivot
 {
     protected $table = 'vendor_users';
 
@@ -13,11 +13,16 @@ class VendorUser extends Model
         'user_id',
         'role',
         'permissions',
+        'added_by',
     ];
 
     protected $casts = [
         'permissions' => 'array',
     ];
+    public function addedBy()
+    {
+        return $this->belongsTo(User::class, 'added_by');
+    }
 
     public function vendor()
     {

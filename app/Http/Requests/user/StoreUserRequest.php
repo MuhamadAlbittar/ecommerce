@@ -25,6 +25,7 @@ class StoreUserRequest extends FormRequest
             'city' => ['nullable', 'string', 'max:100'],
             'street' => ['nullable', 'string', 'max:150'],
             'building' => ['nullable', 'string', 'max:50'],
+            'role' => ['nullable', 'string', 'max:50', 'in:customer,seller'],
         ];
     }
 

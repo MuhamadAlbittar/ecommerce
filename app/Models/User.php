@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -23,7 +22,9 @@ class User extends Authenticatable implements HasMedia
         'country',
         'city',
         'street',
-        'building'
+        'building',
+        'created_by',
+
 
     ];
 
@@ -40,16 +41,17 @@ class User extends Authenticatable implements HasMedia
 // User → Vendors (N:N عبر vendor_users)
     public function vendors()
     {
-        return $this->belongsToMany(Vendor::class, 'vendor_users')
-        ->withPivot(['role','permissions'])
-        ->withTimestamps();
+             return $this->belongsToMany(Vendor::class, 'vendor_users')
+                ->using(VendorUser::class)
+                ->withPivot('role', 'permissions')
+                ->withTimestamps();
     }
 
     // User → VendorUsers (1:N)
-    public function vendorUsers()
-    {
-        return $this->hasMany(VendorUser::class);
-    }
+    // public function vendorUsers()
+    // {
+    //     return $this->hasMany(VendorUser::class);
+    // }
 
 
 
@@ -96,6 +98,16 @@ class User extends Authenticatable implements HasMedia
     }
      public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('logo')->useDisk('public');
+        $this->addMediaCollection('user-image')->useDisk('public')->singleFile();
+    }
+    //لمعرفة من اضاف المستخدم ومن انشأه
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function createdUsers()
+    {
+        return $this->hasMany(User::class, 'created_by');
     }
 }
