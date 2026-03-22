@@ -21,18 +21,20 @@ class Vendor extends Model implements HasMedia
         'phone',
         'address',
         'status',
+        
     ];
     public function users()
     {
-        return $this->belongsToMany(User::class, 'vendor_users')
-        ->withPivot(['role','permissions'])
-        ->withTimestamps();
+              return $this->belongsToMany(User::class, 'vendor_users')
+                ->using(VendorUser::class)
+                ->withPivot('role', 'permissions')
+                ->withTimestamps();
     }
 
-    public function vendorUsers()
-    {
-        return $this->hasMany(VendorUser::class);
-    }
+    // public function vendorUsers()
+    // {
+    //     return $this->hasMany(VendorUser::class);
+    // }
 
     public function vendorProducts()
     {
@@ -66,6 +68,6 @@ class Vendor extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('logo')->useDisk('public');
+        $this->addMediaCollection('vendor-logo')->useDisk('public');
     }
 }

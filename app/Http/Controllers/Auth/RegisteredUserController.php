@@ -21,6 +21,10 @@ class RegisteredUserController extends Controller
     {
         return view('auth.register');
     }
+    // public function create_vendor_user(): View
+    // {
+    //     return view('adminPanal.user.add_user_vendor');
+    // }
 
     /**
      * Handle an incoming registration request.
@@ -36,7 +40,10 @@ public function store(StoreUserRequest $request)
         $user = User::create($data);
         event(new Registered($user));
         Auth::login($user);
-
-        return redirect(route('dashboard.index', absolute: false));
+        // توجيه حسب الدور
+        if ($user->role === 'customer') {
+         return redirect()->route('store');
+        }
+        return redirect(route('dashboard', absolute: false));
     }
 }
