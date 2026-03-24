@@ -28,7 +28,7 @@
                                     Shop
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown_1">
-                                    <a class="dropdown-item" href="#{{--route('store.category')--}}">
+                                    <a class="dropdown-item" href="{{ route('shop.category', ['id' => 1]) }}">
                                         <i class="fas fa-th-large me-2"></i>Shop Category
                                     </a>
                                 </div>
@@ -47,7 +47,7 @@
                                     <a class="dropdown-item" href="#{{--route('store.checkout')--}}">
                                         <i class="fas fa-credit-card me-2"></i>Checkout
                                     </a>
-                                    <a class="dropdown-item" href="#{{--route('store.cart')--}}">
+                                    <a class="dropdown-item" href="{{ route('cart.index') }}">
                                         <i class="fas fa-shopping-cart me-2"></i>Shopping Cart
                                     </a>
                                 </div>
@@ -84,7 +84,7 @@
                         </a>
 
                         {{-- Cart --}}
-                        <a href="#{{--route('store.cart')--}}" class="position-relative">
+                        <a href="{{ route('cart.index') }}" class="position-relative">
                             <i class="fas fa-cart-plus"></i>
                             @auth
                                 @php
@@ -142,7 +142,7 @@
                                     </div>
 
                                     {{-- Links --}}
-                                    <a class="dropdown-item py-2" href="#{{--route('addresses.index')--}}">
+                                    <a class="dropdown-item py-2" href="{{ route('addresses.index') }}">
                                         <i class="fas fa-map-marker-alt me-2 text-muted"></i>My Addresses
                                     </a>
 
@@ -150,7 +150,7 @@
                                         <i class="fas fa-truck me-2 text-muted"></i>Track My Orders
                                     </a>
 
-                                    <a class="dropdown-item py-2" href="#{{--route('store.cart')--}}">
+                                    <a class="dropdown-item py-2" href="{{ route('cart.index') }}">
                                         <i class="fas fa-shopping-cart me-2 text-muted"></i>My Cart
                                     </a>
 

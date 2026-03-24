@@ -18,7 +18,7 @@
     </section>
     <!-- breadcrumb start-->
 
-    <!--================Category Product Area =================-->
+    {{-- <!--================Category Product Area =================-->
     <section class="cat_product_area section_padding">
         <div class="container">
             <div class="row">
@@ -189,9 +189,56 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
+                    <!--================Category Product Area =================-->
+                    <section class="cat_product_area section_padding">
+                        <div class="container">
+                            <div class="row">
+                                <!-- Sidebar -->
+                                <div class="col-lg-3">
+                                    <div class="left_sidebar_area">
+                                        <aside class="left_widgets p_filter_widgets">
+                                            <div class="l_w_title">
+                                                <h3>Browse Categories</h3>
+                                            </div>
+                                            <div class="widgets_inner">
+                                                <ul class="list">
+                                                    @foreach($categories as $category)
+                                                        <li>
+                                                            <a href="{{ route('shop.category', $category->id) }}">
+                                                                {{ $category->name }}
+                                                            </a>
+                                                            <span>({{ $category->products->count() }})</span>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </aside>
+                                    </div>
+                                </div>
 
-                    <div class="row align-items-center latest_product_inner">
+                                <!-- Products -->
+                                <div class="col-lg-9">
+                                    <div class="row">
+                                        @foreach($products as $product)
+                                            <div class="col-lg-4 col-sm-6 mb-4">
+                                                <div class="single_product_item">
+                                                    <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}">
+                                                    <div class="product_text">
+                                                        <h4>{{ $product->name }}</h4>
+                                                        <h3>${{ $product->price }}</h3>
+                                                        <a href="#" class="btn btn-sm btn-primary">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {{-- <div class="row align-items-center latest_product_inner">
                         <div class="col-lg-4 col-sm-6">
                             <div class="single_product_item">
                                 <img src="img/product/product_1.png" alt="">
@@ -310,10 +357,54 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
+    <div class="row align-items-center latest_product_inner">
+
+        @foreach($products as $product)
+            <div class="col-lg-4 col-sm-6">
+                <div class="single_product_item">
+                    
+                    {{-- صورة المنتج --}}
+                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+
+                    <div class="single_product_text">
+                        {{-- اسم المنتج --}}
+                        <h4>{{ $product->name }}</h4>
+
+                        {{-- سعر المنتج --}}
+                        <h3>${{ number_format($product->price, 2) }}</h3>
+
+                        {{-- زر إضافة للسلة --}}
+                        <a href="#" class="add_cart">
+                            + add to cart <i class="ti-heart"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+
+        {{-- في حال ما في منتجات --}}
+        @if($products->count() == 0)
+            <div class="col-lg-12 text-center py-5">
+                <h4>No products found in this category</h4>
+            </div>
+        @endif
+
+        {{-- الباجينيشن --}}
+        <div class="col-lg-12">
+            <div class="pageination">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        {{ $products->links('pagination::bootstrap-4') }}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+    </div>
     <!--================End Category Product Area =================-->
 
-    <!-- product_list part start-->
+    {{-- <!-- product_list part start-->
     <section class="product_list best_seller">
         <div class="container">
             <div class="row justify-content-center">
@@ -361,6 +452,48 @@
                                 <h3>$150.00</h3>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>--}}
+    <section class="product_list best_seller">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-12">
+                    <div class="section_tittle text-center">
+                        <h2>Best Sellers <span>shop</span></h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row align-items-center justify-content-between">
+                <div class="col-lg-12">
+                    <div class="best_product_slider owl-carousel">
+
+                        @foreach($bestSellers as $product)
+                            <div class="single_product_item">
+                                
+                                {{-- صورة المنتج --}}
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+
+                                <div class="single_product_text">
+                                    {{-- اسم المنتج --}}
+                                    <h4>{{ $product->name }}</h4>
+
+                                    {{-- السعر --}}
+                                    <h3>${{ number_format($product->price, 2) }}</h3>
+                                </div>
+                            </div>
+                        @endforeach
+
+                        {{-- في حال ما في منتجات --}}
+                        @if($bestSellers->count() == 0)
+                            <div class="text-center py-5">
+                                <h4>No best sellers found</h4>
+                            </div>
+                        @endif
+
                     </div>
                 </div>
             </div>

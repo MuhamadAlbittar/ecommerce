@@ -22,6 +22,7 @@ use App\Http\Controllers\{
     RefundItemsController,
     ShippingMethodsController,
     VendorShippingMethodsController,
+    StoreController,
     Admin\SellerController
 };
 Route::get('/', function () {return view('welcome');});
@@ -31,10 +32,11 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard');
     })->name('dashboard'); //
     // صفحة العميل
-    Route::get('/home', function () {
-        return view('store.index');
-    })->name('home');
-
+    // Route::get('/home', function () {
+    //     return view('store.index');
+    // })->name('home');
+    Route::get('/home', [StoreController::class, 'index'])->name('store.index');
+    Route::get('/shop/category/{id?}', [StoreController::class, 'category'])->name('shop.category');
 });
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
