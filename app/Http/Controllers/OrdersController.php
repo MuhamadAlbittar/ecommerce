@@ -2,136 +2,158 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Cart;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrdersController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 1. عرض قائمة الطلبات (للأدمن)
      */
     public function index()
     {
-        $orders = auth()->user()->orders()->latest()->get();
-        // dd($orders->pluck('invoice_no', 'customer_name', 'method', 'amount', 'order_time'  ));
-        return view('adminpanal.order.index', compact('orders'));
+        // جلب جميع الطلبات مع المستخدمين لعرضها في لوحة التحكم
+        $orders = Order::with('user')->latest()->get();
+        return view('adminPanal.order.index', compact('orders'));
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    // public function Invoice()
-    // {
-    //     // $carts = auth()->user()->carts()->whereNull('order_id')->get();
-    //     return view('adminpanal.order.invoice',/* compact('carts')*/);
-    // }
-    public function Invoice($id)
-    {
-        $order = Order::with(['user', 'orderItems.product'])->findOrFail($id);
-
-        return view('adminPanal.order.invoice', compact('order'));
-    }
-
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * 2. إنشاء طلب جديد (عملية الشراء - Checkout)
+     * هذا هو الكود الصحيح والآمن لتحويل السلة إلى طلب
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'cart_id' => 'required|exists:carts,id',
+        // 1. التحقق من العنوان
+        $request->validate([
+            'address_id' => 'required|exists:user_addresses,id',
         ]);
-        $cart = auth()->user()->carts()->findOrFail($validated['cart_id']);
-        $order = $cart->orders()->create([
-            'user_id' => auth()->id(),
-            'total_price' => $cart->total_price,
-        ]);
-        $cart->items()->update(['order_id' => $order->id]);
-        return redirect()->route('orders.index')->with('success', 'Order created successfully.');
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        // $order = auth()->user()->orders()->findOrFail($id);
-        return view('adminpanal.order.orderDetails' /*, compact('order')*/);
-    }
+        $user = auth()->user();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        // 2. جلب السلة مع العناصر والمنتجات
+        $cart = Cart::with('items.product')->where('user_id', $user->id)->first();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        // التحقق من وجود سلة وبداخلها منتجات
+        if (!$cart || $cart->items->isEmpty()) {
+            return back()->with('error', 'سلتك فارغة!');
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
-    public function track(Request $request)
-{
-    $order = null;
-    $error = null;
+        // 3. بدء المعاملة (Transaction) لضمان سلامة البيانات
+        DB::beginTransaction();
+        try {
+            $total = 0;
 
-    if ($request->filled('order_id')) {
-        $order = \App\Models\Order::with([
-            'orderItems.product',
-            'orderShipments.shippingMethod',
-            'orderVendors',
-        ])->where('id', $request->order_id)
-          ->where('user_id', auth()->id())
-          ->first();
+            // حساب المجموع الكلي
+            foreach ($cart->items as $item) {
+                $price = $item->product->sale_price ?? $item->product->price;
+                $total += $price * $item->quantity;
+            }
 
-        if (!$order) {
-            $error = 'Order not found. Please check the order number.';
+            // 4. إنشاء الطلب الرئيسي
+            $order = Order::create([
+                'user_id' => $user->id,
+                'user_address_id' => $request->address_id,
+                'total' => $total,
+                'status' => 'pending',
+                'payment_status' => 'pending',
+            ]);
+
+            // 5. نقل العناصر من السلة إلى عناصر الطلب وتحديث المخزون
+            foreach ($cart->items as $item) {
+                $price = $item->product->sale_price ?? $item->product->price;
+
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item->product_id,
+                    'qty' => $item->quantity,
+                    'unit_price' => $price,
+                    'total' => $price * $item->quantity,
+                ]);
+
+                // خصم الكمية من المخزون
+                $item->product->decrement('quantity', $item->quantity);
+            }
+
+            // 6. حذف السلة بعد نجاح العملية
+            $cart->items()->delete();
+            $cart->delete();
+
+            DB::commit(); // تأكيد الحفظ النهائي
+
+            return redirect()->route('orders.confirmation', $order->id)
+                             ->with('success', 'تم الطلب بنجاح!');
+
+        } catch (\Exception $e) {
+            DB::rollBack(); // التراجع عن كل شيء عند حدوث خطأ
+            return back()->with('error', 'حدث خطأ أثناء المعالجة: ' . $e->getMessage());
         }
     }
 
-    return view('store.tracking', compact('order', 'error'));
-}
-    // public function updateStatus(Request $request, Order $order)
-    // {
-    //     $request->validate([
-    //         'status' => 'required|string'
-    //     ]);
+    /**
+     * 3. صفحة تأكيد الطلب (للمستخدم)
+     */
+    public function confirmation($id)
+    {
+        $order = Order::with('items.product')->where('user_id', auth()->id())->findOrFail($id);
+        return view('store.confirmation', compact('order'));
+    }
 
-    //     $order->status = $request->status;
-    //     $order->save();
+    /**
+     * 4. طباعة الفاتورة (للأدمن)
+     */
+    public function Invoice($id)
+    {
+        $order = Order::with(['user', 'items.product'])->findOrFail($id);
+        return view('adminPanal.order.invoice', compact('order'));
+    }
 
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Status updated successfully'
-    //     ]);
-    // }طريقة AJAX
+    /**
+     * 5. تتبع الطلب (للمستخدم)
+     */
+    public function track(Request $request)
+    {
+        $order = null;
+        $error = null;
+
+        if ($request->filled('order_id')) {
+            // البحث عن الطلب الخاص بالمستخدم فقط
+            $order = Order::with(['items.product', 'orderShipments'])
+                        ->where('id', $request->order_id)
+                        ->where('user_id', auth()->id())
+                        ->first();
+
+            if (!$order) {
+                $error = 'لم يتم العثور على الطلب، تأكد من الرقم.';
+            }
+        }
+
+        return view('store.tracking', compact('order', 'error'));
+    }
+
+    /**
+     * 6. تحديث حالة الطلب (للأدمن)
+     */
     public function updateStatus(Request $request, Order $order)
     {
         $request->validate([
-            'status' => 'required|string'
+            'status' => 'required|string|in:pending,processing,shipped,delivered,cancelled'
         ]);
 
         $order->status = $request->status;
         $order->save();
 
-        return redirect()->back()->with('success', 'Status updated successfully');
+        return redirect()->back()->with('success', 'تم تحديث حالة الطلب بنجاح');
     }
 
-
+    /**
+     * 7. عرض تفاصيل الطلب (للأدمن)
+     */
+    public function show(string $id)
+    {
+        $order = Order::with('items.product', 'user')->findOrFail($id);
+        return view('adminPanal.order.orderDetails', compact('order'));
+    }
 }
