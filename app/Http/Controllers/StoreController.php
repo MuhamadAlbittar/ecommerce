@@ -31,5 +31,8 @@ class StoreController extends Controller
 
         return view('store.category', compact('categories', 'products', 'bestSellers'));
     }
-    
+    public function contact()
+    {
+        return view('store.contact');
+    }
 }

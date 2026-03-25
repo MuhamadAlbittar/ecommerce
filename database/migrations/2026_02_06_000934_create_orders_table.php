@@ -16,7 +16,7 @@ public function up()
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
         $table->foreignId('cart_id')->constrained()->onDelete('cascade');
         $table->integer('total_price'); // stored in cents
-        $table->enum('status', ['pending', 'completed'])->default('pending');
+        $table->enum('status', ['Pending', 'Delivered', 'Cancelled','Processing'])->default('Pending');
         $table->timestamps();
     });
 }

@@ -23,6 +23,7 @@ use App\Http\Controllers\{
     ShippingMethodsController,
     VendorShippingMethodsController,
     StoreController,
+    SupportSettingController,
     Admin\SellerController
 };
 Route::get('/', function () {return view('welcome');});
@@ -99,4 +100,11 @@ Route::get('/cart/remove/{id}', [\App\Http\Controllers\CartController::class, 'r
 Route::get('/cart/clear', [\App\Http\Controllers\CartController::class, 'clear'])->name('cart.clear');
 Route::get('/store', [\App\Http\Controllers\StoreController::class, 'index'])->name('store.index');
 
+Route::post('/orders/{order}/status', [OrdersController::class, 'updateStatus'])
+    ->name('orders.updateStatus');
+Route::get('/orders/{order}/invoice', [OrdersController::class, 'Invoice'])
+    ->name('orders.Invoice');
+Route::get('/contact', [\App\Http\Controllers\StoreController::class, 'contact'])->name('store.contact');
 
+Route::get('/support-settings', [SupportSettingController::class, 'index'])->name('support.index');
+Route::post('/support-settings', [SupportSettingController::class, 'update'])->name('support.update');

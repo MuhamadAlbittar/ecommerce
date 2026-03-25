@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Order;
 
 class OrdersController extends Controller
 {
@@ -11,17 +12,29 @@ class OrdersController extends Controller
      */
     public function index()
     {
-        $order = auth()->user()->orders()->latest()->get();
-        return view('adminpanal.order.index', compact('order'));
+        $orders = auth()->user()->orders()->latest()->get();
+        // dd($orders->pluck('invoice_no', 'customer_name', 'method', 'amount', 'order_time'  ));
+        return view('adminpanal.order.index', compact('orders'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
+    // public function Invoice()
+    // {
+    //     // $carts = auth()->user()->carts()->whereNull('order_id')->get();
+    //     return view('adminpanal.order.invoice',/* compact('carts')*/);
+    // }
+    public function Invoice($id)
+    {
+        $order = Order::with(['user', 'orderItems.product'])->findOrFail($id);
+
+        return view('adminPanal.order.invoice', compact('order'));
+    }
+
     public function create()
     {
-        // $carts = auth()->user()->carts()->whereNull('order_id')->get();
-        return view('adminpanal.order.invoice',/* compact('carts')*/);
+        //
     }
 
     /**
@@ -94,4 +107,31 @@ class OrdersController extends Controller
 
     return view('store.tracking', compact('order', 'error'));
 }
+    // public function updateStatus(Request $request, Order $order)
+    // {
+    //     $request->validate([
+    //         'status' => 'required|string'
+    //     ]);
+
+    //     $order->status = $request->status;
+    //     $order->save();
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Status updated successfully'
+    //     ]);
+    // }طريقة AJAX
+    public function updateStatus(Request $request, Order $order)
+    {
+        $request->validate([
+            'status' => 'required|string'
+        ]);
+
+        $order->status = $request->status;
+        $order->save();
+
+        return redirect()->back()->with('success', 'Status updated successfully');
+    }
+
+
 }
