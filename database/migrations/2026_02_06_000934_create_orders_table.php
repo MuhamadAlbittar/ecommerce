@@ -15,10 +15,17 @@ public function up()
         $table->id();
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
         $table->foreignId('cart_id')->constrained()->onDelete('cascade');
+        $table->foreignId('shipping_method_id')->nullable()->constrained('shipping_methods');
+        $table->foreignId('shipping_address_id')->nullable()->constrained('user_addresses');
+        
         $table->integer('total_price'); // stored in cents
         $table->enum('status', ['Pending', 'Delivered', 'Cancelled','Processing'])->default('Pending');
         $table->timestamps();
     });
+//     Schema::table('orders', function (Blueprint $table) {
+        
+        // });
+
 }
 
     /**

@@ -38,17 +38,23 @@ class CategoriesController extends Controller
        $request->validate([
             'name' => 'required|string|max:255',
             'status' => 'required',
-            'image' => 'nullable|image',
+            'image' => 'nullable|image|max:5000|mimes:jpg,jpeg,png,webp',
         ]);
 
         $data = $request->only(['name', 'status']);
 
-        // إذا كانت الصورة موجودة فقط
+        Category::create($data);
+
+         // إذا كانت الصورة موجودة فقط
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('categories', 'public');
         }
 
-        Category::create($data);
+        if ($request->hasFile('image')) {   
+                $category
+                ->addMedia($request->file('image'))
+                ->toMediaCollection('images');
+        }
 
         return redirect()->route('categories.index')
             ->with('success', 'Category created successfully.');
@@ -83,7 +89,7 @@ class CategoriesController extends Controller
     $request->validate([
         'name'   => 'sometimes|required|string|max:255',
         'status' => 'sometimes|required|in:Active,Inactive',
-        'image'  => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        'image'  => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp|max:5000',
     ]);
 
     // 3) Update status only if sent
@@ -99,12 +105,15 @@ class CategoriesController extends Controller
     // 5) Handle image upload
     if ($request->hasFile('image')) {
 
-        if ($category->image && Storage::disk('public')->exists($category->image)) {
-            Storage::disk('public')->delete($category->image);
-        }
-
-        $imagePath = $request->file('image')->store('categories', 'public');
-        $category->image = $imagePath;
+        // if ($category->image && Storage::disk('public')->exists($category->image)) {
+        //     Storage::disk('public')->delete($category->image);
+        // } 
+        $category
+        ->addMedia($request->file('image'))
+        ->toMediaCollection('images');
+    
+        // $imagePath = $request->file('image')->store('categories', 'public');
+        // $category->image = $imagePath;
     }
 
     // 6) Save

@@ -56,35 +56,38 @@
                     </div>
 
                     {{-- Upload Image --}}
-                    <div class="col-12">
-                        <div class="card shadow-sm border-0 border-radius-12 mb-4">
-                            <div class="card-header bg-white pt-3">
-                                <h5 class="fw-normal text-start">Upload images</h5>
-                            </div>
+                    <form action="..." method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="col-12">
+                            <div class="card shadow-sm border-0 border-radius-12 mb-4">
+                                <div class="card-header bg-white pt-3">
+                                    <h5 class="fw-normal text-start">Upload images</h5>
+                                </div>
 
-                            <div class="card-body p-4">
-                                <div class="file-upload-container">
+                                <div class="card-body p-4">
+                                    <div class="file-upload-container">
 
-                                    <div id="dropzone" class="dropzone">
-                                        <div class="icon">
-                                            <!-- ضع هنا الـ SVG تبعك كما كان -->
-                                            <svg width="90" height="90" viewBox="0 0 105 135" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                ... نفس الـ SVG اللي كان عندك ...
-                                            </svg>
-                                        </div>
+                                        <div id="dropzone" class="dropzone">
+                                            <div class="icon">
+                                                <!-- ضع هنا الـ SVG تبعك كما كان -->
+                                                <svg width="90" height="90" viewBox="0 0 105 135" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    ... نفس الـ SVG اللي كان عندك ...
+                                                </svg>
+                                            </div>
 
-                                        <p>Drag and drop your file here</p>
-                                        <p>or</p>
-                                        <a href="javascript:void(0)" id="browseButton">Browse files</a>
+                                            <p>Drag and drop your file here</p>
+                                            <p>or</p>
+                                            <a href="javascript:void(0)" id="browseButton">Browse files</a>
 
-                                        <input 
-                                            name="image" 
-                                            id="fileInput" 
-                                            type="file" 
-                                            hidden
-                                        />
+                                            <input 
+                                                name="image" 
+                                                id="fileInput" 
+                                                type="file" 
+                                                multiple
+                                                hidden
+                                            />
 
-                                    </div>
+                                </div>
 
                                     <div id="preview" class="preview-grid"></div>
 
@@ -94,6 +97,7 @@
 
                                 </div>
                             </div>
+                        </form>    
                         </div>
                     </div>
 

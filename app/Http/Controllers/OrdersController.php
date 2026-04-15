@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\UserAddress;
+use App\Models\ShippingMethod;
 
 class OrdersController extends Controller
 {
@@ -57,10 +59,18 @@ class OrdersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        // $order = auth()->user()->orders()->findOrFail($id);
-        return view('adminpanal.order.orderDetails' /*, compact('order')*/);
+        $order = Order::with([
+            'orderItems.product',
+            'shippingMethod',
+            'UserAddress',
+            'payments'
+        ])->findOrFail($id);
+        $orderItems = $order->orderItems()->with('product')->get();
+        $orderShippingAddress = $order->UserAddress;
+        $orderPaymentMethod = $order->payments()->first();
+        return view('adminPanal.order.orderDetails', compact('order', 'orderItems', 'orderShippingAddress', 'orderPaymentMethod'));
     }
 
     /**

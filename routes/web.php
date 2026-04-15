@@ -107,4 +107,4 @@ Route::get('/orders/{order}/invoice', [OrdersController::class, 'Invoice'])
 Route::get('/contact', [\App\Http\Controllers\StoreController::class, 'contact'])->name('store.contact');
 
 Route::get('/support-settings', [SupportSettingController::class, 'index'])->name('support.index');
-Route::post('/support-settings', [SupportSettingController::class, 'update'])->name('support.update');
+Route::post('/support-settings', [SupportSettingController::class, 'create'])->name('support.create');

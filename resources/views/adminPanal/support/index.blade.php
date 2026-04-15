@@ -7,7 +7,7 @@
         <div class="card shadow-sm border-0 border-radius-12 p-4">
             <h3 class="mb-4">Help & Support Settings</h3>
 
-            <form action="{{ route('support.update') }}" method="POST">
+            <form action="{{ route('support.create') }}" method="POST">
                 @csrf
 
                 <h5 class="mb-3">Store Support</h5>

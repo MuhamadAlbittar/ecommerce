@@ -21,5 +21,12 @@ class SupportSettingController extends Controller
 
         return back()->with('success', 'Support settings updated successfully');
     }
+    public function create(Request $request)
+    {
+        SupportSetting::create($request->all());
+
+        return back()->with('success', 'Support settings created successfully');
+    }
+   
 }
 

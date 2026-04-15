@@ -4,9 +4,13 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="container">
-                <button type="button" class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#addVendorModal">
+                <button type="button" class="btn m-3" 
+                        style="background-color: #266663; border-color: #266663; color: #FFFFFF;" 
+                        data-bs-toggle="modal" data-bs-target="#addVendorModal">
                     Add Vendor
                 </button>
+
+
                  @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>

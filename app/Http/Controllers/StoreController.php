@@ -11,8 +11,8 @@ class StoreController extends Controller
     public function index()
     {
         $products = Product::where('status', 'In Stock')->get();
-
-        return view('store.index', compact('products'));
+        $categories = Category::where('status', 'Active')->get(); 
+        return view('store.index', compact('products', 'categories'));
     }
 
     public function category($id = null)

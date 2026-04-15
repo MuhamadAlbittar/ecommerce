@@ -41,7 +41,6 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
         {
-            
             // 1) التحقق من البيانات
             $validated = $request->validate([
                 'name'        => 'required|string|max:255',
@@ -55,25 +54,28 @@ class ProductsController extends Controller
                 'price'       => 'required|numeric',
                 'sale_price'  => 'nullable|numeric',
                 'tags'        => 'nullable|string',
-                'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+                'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5000',
                 'status'      => 'nullable|string|in:In Stock,Out of Stock'
             ]);
             
-
-            // 2) رفع الصورة إذا موجودة
-            if ($request->hasFile('image')) {
-                $imageName = time() . '.' . $request->image->extension();
-                $request->image->move(public_path('uploads/products'), $imageName);
-
-                // إضافة اسم الصورة للمصفوفة
-                $validated['image'] = $imageName;
-            }
-
             // 3) إنشاء المنتج
             $product = Product::create(collect($validated)->except('category_id')->toArray());
+
             // ربط الفئات
             $product->categories()->sync($validated['category_id']);
-            
+
+             // 2) رفع الصورة إذا موجودة
+            if ($request->hasFile('image')) {   
+                $product
+                ->addMedia($request->file('image'))
+                ->toMediaCollection('images'); // نفس اسم الكولكشن
+
+                // $imageName = time() . '.' . $request->image->extension();
+                // $request->image->move(public_path('uploads/products'), $imageName);
+                // إضافة اسم الصورة للمصفوفة
+                // $validated['image'] = $imageName;
+            }
+
             // 4) إعادة التوجيه
             return redirect()->route('products.index')->with('success', 'تم اضافة المنتج بنجاح');
         }
@@ -94,7 +96,6 @@ class ProductsController extends Controller
         $vendors = Vendor::all(); // جلب جميع البائعين
         $categories = Category::all();
 
-
         return view('adminPanal.product.edit', compact('product', 'vendors', 'categories'));
     }
     /**
@@ -105,7 +106,7 @@ class ProductsController extends Controller
         {
             // 1) Get product
             $product = Product::findOrFail($id);
-
+            
             // 2) Validation
             $validated = $request->validate([
                 'name'        => 'sometimes|required|string|max:255',
@@ -119,20 +120,24 @@ class ProductsController extends Controller
                 'price'       => 'sometimes|required|numeric',
                 'sale_price'  => 'nullable|numeric',
                 'tags'        => 'nullable|string',
-                'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+                'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5000',
                 'status'      => 'sometimes|required|string|in:In Stock,Out of Stock',
             ]);
-            // 3) Handle image upload
-            if ($request->hasFile('image')) {
-                $imageName = time() . '.' . $request->image->extension();
-                $request->image->move(public_path('uploads/products'), $imageName);
-                $validated['image'] = $imageName;
-            }
+            
             // 4) Update product
             $product->update(collect($validated)->except('category_id')->toArray());
             // ربط الفئات
             $product->categories()->sync($validated['category_id']);
 
+            // 3) Handle image upload
+            if ($request->hasFile('image')) {
+                $product
+                ->addMedia($request->file('image'))
+                ->toMediaCollection('images'); // نفس اسم الكولكشن
+                // $imageName = time() . '.' . $request->image->extension();
+                // $request->image->move(public_path('uploads/products'), $imageName);
+                // $validated['image'] = $imageName;
+            }
 
             return redirect()->route('products.index')->with('success', 'تم تحديث المنتج بنجاح');
         }

@@ -84,7 +84,7 @@
                             <div class="card-header bg-white pt-3">
                                 <h5 class="fw-normal text-start">Media</h5>
 
-                                <input type="file" name="image" id="imageInput" class="form-control" accept="image/*">
+                                <input type="file" id="imageInput" class="form-control" accept="image/*">
 
                                 @if($product->image)
                                     <img src="{{ asset('uploads/products/' . $product->image) }}" 
@@ -100,7 +100,7 @@
                                         <p>Drag and drop your file here</p>
                                         <p>or</p>
                                         <a href="javascript:void(0)" id="browseButton">Browse files</a>
-                                        <input id="fileInput" type="file" multiple hidden>
+                                        <input id="fileInput" name="image" type="file" multiple hidden>
                                     </div>
 
                                     <div id="preview" class="preview-grid"></div>

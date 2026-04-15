@@ -60,6 +60,7 @@
                     </div>
 
                     {{-- Upload Image --}}
+                    
                     <div class="col-12">
                         <div class="card shadow-sm border-0 border-radius-12 mb-4">
                             <div class="card-header bg-white pt-3">
@@ -81,8 +82,10 @@
                                             >
                                         </div>
                                     </div>
-                                @endif
+                                @endif 
 
+                            <form action="..." method="POST" enctype="multipart/form-data">
+                                 @csrf
                                 <div class="file-upload-container">
 
                                     <div id="dropzone" class="dropzone">
@@ -100,6 +103,7 @@
                                             name="image" 
                                             id="fileInput" 
                                             type="file" 
+                                            multiple
                                             hidden
                                         />
                                     </div>
@@ -111,6 +115,7 @@
                                     @enderror
 
                                 </div>
+                            </form>
                             </div>
                         </div>
                     </div>

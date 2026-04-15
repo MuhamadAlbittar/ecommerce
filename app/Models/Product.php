@@ -3,10 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-class Product extends Model
+class Product extends Model implements HasMedia
 {
-    use HasFactory;
+    // use HasFactory;
+    use InteractsWithMedia;
+
+    // 
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('images');
+    }
     protected $table = 'products';
 
      protected $fillable = [

@@ -67,8 +67,8 @@
                                                 <td>{{ $category->name }}</td>
 
                                                 <td>
-                                                    <img src="{{ asset($category->image) }}" 
-                                                        alt="Product Image" 
+                                                    <img src="{{ $category->getFirstMediaUrl('images') }}" 
+                                                        alt="Category Image" 
                                                         class="p-img-thumbnail">
                                                 </td>
 
