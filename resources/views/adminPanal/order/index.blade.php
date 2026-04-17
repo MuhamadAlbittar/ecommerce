@@ -62,7 +62,43 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
+                                            @foreach ($orders as $order)
+                                                <tr>
+                                                    {{-- {{dd($order);}} --}}
+                                                    <td>{{ '#' . $order->id }}</td>
+                                                    <td>{{ $order->user->name }}</td>
+                                                    <td>{{ $order->payments->first()->method ?? '—' }}</td>
+                                                    <td>{{ $order->total_price }}</td>
+                                                    <td>{{ $order->created_at->format('d M, Y g:i A') }}</td>
+                                                    <td><span class="status-badge status-{{ $order->status === 'Delivered' ? 'success' : ($order->status === 'Cancelled' ? 'danger' : 'warning') }}">{{ $order->status }}</span></td>
+                                                    <td class="d-flex justify-content-between">
+                                                        <div class="mb-2 w-75">
+                                                            <form action="{{ route('orders.updateStatus', $order->id) }}" method="POST">
+                                                                @csrf
+                                                                <select name="status" class="form-select form-select-sm"
+                                                                        onchange="this.form.submit()">
+
+                                                                    <option value="pending" {{ $order->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                                                    <option value="processing" {{ $order->status == 'Processing' ? 'selected' : '' }}>Processing</option>
+                                                                    <option value="delivered" {{ $order->status == 'Delivered' ? 'selected' : '' }}>Delivered</option>
+                                                                    <option value="cancelled" {{ $order->status == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+
+                                                                </select>
+                                                            </form>
+                                                        </div>
+                                                        <div class="dropdown w-25">
+                                                            <a class="nav-link px-3 pt-1 pb-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                            </a>
+                                                            <ul class="dropdown-menu">
+                                                                <li><a class="dropdown-item py-2" href="{{ route('orders.show', $order->id) }}">View</a></li>
+                                                                <li><a class="dropdown-item py-2" href="{{ route('orders.Invoice', $order->id) }}">Invoice</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>   
+                                            @endforeach
+                                            {{-- <tr>
                                                 <td>#12598</td>
                                                 <td>John Doe</td>
                                                 <td>Cash</td>
@@ -196,7 +232,7 @@
                                                         </ul>
                                                     </div>
                                                 </td>
-                                            </tr>
+                                            </tr> --}}
                                         </tbody>
                                     </table>
                                 </div>

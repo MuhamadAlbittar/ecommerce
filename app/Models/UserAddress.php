@@ -31,7 +31,12 @@ class UserAddress extends Model
     {
         return $this->belongsTo(User::class);
     }
-
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'shipping_address_id');
+    }   
+    
+    
     // Scope للعنوان الافتراضي
     public function scopeDefault($query)
     {

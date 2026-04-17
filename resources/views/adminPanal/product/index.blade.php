@@ -86,8 +86,9 @@
 
                                                           <td>
                                                               @if($product->image)
-                                                                  <img src="{{ asset('uploads/products/' . $product->image) }}"
+                                                                  <img src="{{ $product->getFirstMediaUrl('images') }}" 
                                                                       alt="Product Image" class="p-img-thumbnail">
+                                                                      {{-- src="{{ asset('uploads/products/' . $product->image) }}" --}}
                                                               @else
                                                                   <span>No Image</span>
                                                               @endif

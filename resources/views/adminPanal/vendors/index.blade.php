@@ -7,6 +7,8 @@
                 <button type="button" class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#addVendorModal">
                     Add Vendor
                 </button>
+
+
                  @if ($errors->any())
                   <div class="alert alert-danger">
                     <ul>
@@ -173,7 +175,7 @@
 
             <!-- Modal Add Vendor -->
         <div class="modal fade" id="addVendorModal" tabindex="-1" aria-labelledby="addVendorModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl"> 
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
 
             <!-- Header -->

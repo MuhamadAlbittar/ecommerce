@@ -69,30 +69,36 @@
                     </div>
                 </div>
 
-                <!-- MEDIA -->
-                <div class="col-12">
-                    <div class="card shadow-sm border-0 border-radius-12 mb-4">
-                        <div class="card-header bg-white pt-3">
-                            <h5 class="fw-normal text-start">Media</h5>
+                
 
-                            <input type="file" name="image" id="imageInput" class="form-control" accept="image/*">
-                            <img id="previewImage" style="max-width: 200px; margin-top: 10px; display:none;">
-                        </div>
+                    <!-- MEDIA -->
+                    <form action="..." method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="col-12">
+                            <div class="card shadow-sm border-0 border-radius-12 mb-4">
+                                <div class="card-header bg-white pt-3">
+                                    <h5 class="fw-normal text-start">Media</h5>
 
-                        <div class="card-body p-4">
-                            <div class="file-upload-container">
-                                <div id="dropzone" class="dropzone">
-                                    <p>Drag and drop your file here</p>
-                                    <p>or</p>
-                                    <a href="javascript:void(0)" id="browseButton">Browse files</a>
-                                    <input id="fileInput" type="file" multiple hidden>
+                                    <input type="file" id="imageInput" class="form-control" accept="image/*">
+                                    <img id="previewImage" style="max-width: 200px; margin-top: 10px; display:none;">
                                 </div>
 
-                                <div id="preview" class="preview-grid"></div>
+                                <div class="card-body p-4">
+                                    <div class="file-upload-container">
+                                        <div id="dropzone" class="dropzone">
+                                            <p>Drag and drop your file here</p>
+                                            <p>or</p>
+                                            <a href="javascript:void(0)" id="browseButton">Browse files</a>
+                                            <input id="fileInput" type="file" name="image" multiple hidden>
+                                        </div>
+
+                                        <div id="preview" class="preview-grid"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </form>
+
 
                 <!-- PRICING -->
                 <div class="col-lg-6">
@@ -216,6 +222,7 @@
                         preview.appendChild(img);
                     }
                     reader.readAsDataURL(file);
+                    
                 });
             });
             </script>

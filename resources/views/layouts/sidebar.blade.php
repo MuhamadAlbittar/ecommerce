@@ -36,7 +36,7 @@
                             <ul class="sidebar-submenu">
                                 <li><a href="{{ route('orders.index') }}" class="submenu-link">List</a></li>
                                 <li><a href="{{ route('orders.show', 1) }}" class="submenu-link">Details</a></li>
-                                <li><a href="{{ route('orders.create') }}" class="submenu-link">Invoice</a></li>{{--{{ route('orders.invoice', 1) }}--}}
+                                <li><a href="{{ route('orders.Invoice', 1) }}" class="submenu-link">Invoice</a></li>{{--{{ route('orders.invoice', 1) }}--}}
                             </ul>
                         </li>
                         <li>
@@ -64,7 +64,7 @@
 
 
                         <li><a href="#" class="text-black sidebar-link"><i class="fa-regular fa-message"></i><p>Message</p></a></li>
-                        <li><a href="#" class="text-black sidebar-link"><i class="fa-solid fa-phone"></i><p>Help & Support</p></a></li>
+                        <li><a href="{{ route('support.index') }}" class="text-black sidebar-link"><i class="fa-solid fa-phone"></i><p>Help & Support</p></a></li>
                     </ul>
                </div>
         </div>

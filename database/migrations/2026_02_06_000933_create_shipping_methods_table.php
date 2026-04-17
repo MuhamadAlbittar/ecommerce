@@ -13,6 +13,7 @@ return new class extends Migration
 {
     Schema::create('shipping_methods', function (Blueprint $table) {
         $table->id();
+        $table->foreignId('shipping_method_id')->nullable()->constrained('shipping_methods');
         $table->string('name');
         $table->text('description')->nullable();
         $table->integer('estimated_days')->default(3);

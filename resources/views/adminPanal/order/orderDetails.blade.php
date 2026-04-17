@@ -22,13 +22,26 @@
                                                             <th scope="col" class="py-3">Price</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody>
+                                                    {{-- <tbody>
                                                         <tr>
                                                             <td><img src="./assets/images/p1.jfif" alt="Product Image" class="p-img-thumbnail"> <span class="ms-2">Blue denim jacket</span></td>
                                                             <td>12</td>
                                                             <td>$4,099</td>
                                                         </tr>
+                                                    </tbody> --}}
+                                                    <tbody>
+                                                        @foreach($order->orderItems as $item)
+                                                        <tr>
+                                                            <td>
+                                                                <img src="{{ asset($item->product->image) }}" class="p-img-thumbnail">
+                                                                <span class="ms-2">{{ $item->product->name }}</span>
+                                                            </td>
+                                                            <td>{{ $item->quantity }}</td>
+                                                            <td>${{ number_format($item->price, 2) }}</td>
+                                                        </tr>
+                                                        @endforeach
                                                     </tbody>
+
                                                 </table>
                                             </div>
                                         </div>
@@ -49,7 +62,7 @@
                                                       <th scope="col" class="text-uppercase">Price</th>
                                                     </tr>
                                                   </thead>
-                                                  <tbody class="table-group-divider">
+                                                  {{-- <tbody class="table-group-divider">
                                                     <tr>
                                                       <td>Subtotal</td>
                                                       <td>$362</td>
@@ -66,7 +79,26 @@
                                                       <th class="text-uppercase">Total</th>
                                                       <td class="text-danger fw-bold ">$495.1</td>
                                                     </tr>
-                                                  </tbody>
+                                                  </tbody> --}}
+                                                  <tbody class="table-group-divider">
+                                                    <tr>
+                                                        <td>Subtotal</td>
+                                                        <td>${{ number_format($order->subtotal, 2) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Tax ({{ $order->tax_rate }}%)</td>
+                                                        <td>${{ number_format($order->tax_amount, 2) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Shipping</td>
+                                                        <td>${{ number_format($order->shipping_cost, 2) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="text-uppercase">Total</th>
+                                                        <td class="text-danger fw-bold">${{ number_format($order->total, 2) }}</td>
+                                                    </tr>
+                                                </tbody>
+
                                                 </table>
                                               </div>
                                         </div>
@@ -85,15 +117,15 @@
                                             <table>
                                                 <tr>
                                                     <td width="50%">Order ID:</td>
-                                                    <td width="50%"><b>#192847</b></td>
+                                                    <td width="50%"><b>#{{ $order->id }}</b></td>
                                                 </tr>
                                                 <tr>
                                                     <td width="50%">Date:</td>
-                                                    <td width="50%"><b>20 Nov 2023</b></td>
+                                                    <td width="50%"><b>{{ $order->created_at->format('d M Y') }}</b></td>
                                                 </tr>
                                                 <tr>
                                                     <td width="50%">Total:</td>
-                                                    <td width="50%"><b>$50</b></td>
+                                                    <td width="50%"><b>${{ number_format($order->total, 2) }}</b></td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -108,7 +140,15 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <p>1234 Elm Street San Francisco, California, 94101 United States</p>
+                                            <p>{{ $order->UserAddress->address }}</p>
+                                            {{-- <p>
+                                                {{ $order->shippingAddress->street }},
+                                                {{ $order->shippingAddress->city }},
+                                                {{ $order->shippingAddress->state }},
+                                                {{ $order->shippingAddress->zip }}},
+                                                {{ $order->shippingAddress->country }}
+                                            </p> --}}
+
                                         </div>
                                     </div>
                                 </div>
@@ -121,7 +161,8 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <p>Pay on Delivery (Cash/Card). Cash on delivery (COD) available. Card/Net banking acceptance subject to device availability.</p>
+                                            {{-- <p>Pay on Delivery (Cash/Card). Cash on delivery (COD) available. Card/Net banking acceptance subject to device availability.</p> --}}
+                                            <p>{{ $order->payment_method }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -134,7 +175,7 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <p class="text-success">20 Nov 2023</p>
+                                            <p class="text-success">{{ $order->delivery_date->format('d M Y') }}</p>
                                             <a  href="javascript:void(0)" class="btn text-primary border-color hover-bg-primary w-100"><i class="fa-solid fa-truck-fast"></i> Track order</a>
                                         </div>
                                     </div>

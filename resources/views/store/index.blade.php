@@ -1,5 +1,5 @@
 
-@extends('layouts.app')
+{{-- @extends('layouts.app') --}}
 @extends('store.layouts.app')
 @section('content')
     <!-- banner part start-->
@@ -96,14 +96,30 @@
                 </div>
             </div>
             <div class="row align-items-center justify-content-between">
-                <div class="col-lg-7 col-sm-6">
+                {{-- <div class="col-lg-7 col-sm-6">
                     <div class="single_feature_post_text">
                         <p>Premium Quality</p>
                         <h3>Latest foam Sofa</h3>
                         <a href="#" class="feature_btn">EXPLORE NOW <i class="fas fa-play"></i></a>
                         <img src="img/feature/feature_1.png" alt="">
                     </div>
-                </div>
+                </div> --}}
+                @foreach ($categories as $category)
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="single_feature_post_text">
+                            <p>{{ $category->name }}</p>
+                            <h3>{{ $category->name }}</h3>
+
+                            <a href="{{ route('shop.category', $category->id) }}" class="feature_btn">
+                                EXPLORE NOW <i class="fas fa-play"></i>
+                            </a>
+
+                            {{-- صورة التصنيف من Spatie أو من عمود image --}}
+                            <img src="{{ $category->getFirstMediaUrl('images') ?: asset('img/default-category.png') }}" alt="">
+                        </div>
+                    </div>
+                @endforeach
+
                 <div class="col-lg-5 col-sm-6">
                     <div class="single_feature_post_text">
                         <p>Premium Quality</p>
@@ -155,7 +171,8 @@
                                 <div class="col-lg-3 col-sm-6">
                                     <div class="single_product_item">
 
-                                        <img src="{{ asset('storage/' . $product->image) }}" alt="">
+                                        <img src="{{ $product->getFirstMediaUrl('images') ?: asset('img/default.png') }}" alt="">
+
 
                                         <div class="single_product_text">
                                             <h4>{{ $product->name }}</h4>

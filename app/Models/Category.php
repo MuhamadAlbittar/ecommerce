@@ -5,10 +5,13 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class Category extends Model implements HasMedia
 {
     use InteractsWithMedia;
     use HasFactory;
+    use InteractsWithMedia;
+
     protected $table = 'categories';
 
     protected $fillable = [

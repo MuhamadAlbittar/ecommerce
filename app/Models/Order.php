@@ -44,4 +44,24 @@ class Order extends Model
     {
         return $this->hasMany(Refund::class);
     }
+    // public function shippingMethods()
+    // {
+    //     return $this->hasOne(shippingMethod::class);
+    // }
+    public function shippingMethod()
+    {
+        return $this->belongsTo(ShippingMethod::class);
+    }
+    // public function UserAddress()
+    // {
+    //     return $this->belongsTo(UserAddress::class);
+    // }
+    public function userAddress()
+    {
+        return $this->belongsTo(UserAddress::class, 'shipping_address_id');
+    }
+
+    
+
+
 }
