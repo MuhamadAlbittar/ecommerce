@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class User extends Authenticatable implements HasMedia
-{
+{   use Notifiable;
     use InteractsWithMedia;
     use HasFactory;
     protected $fillable = [
@@ -48,12 +49,24 @@ class User extends Authenticatable implements HasMedia
     }
 
     // User → VendorUsers (1:N)
-    // public function vendorUsers()
-    // {
-    //     return $this->hasMany(VendorUser::class);
-    // }
+    public function vendorUsers()
+    {
+        return $this->hasMany(VendorUser::class);
+    }
 
+    public function canDo($permission)
+    {
+        $vendorUser = $this->vendorUsers()->first();
 
+        if (!$vendorUser) return false;
+
+        // صلاحيات JSON
+        if (!empty($vendorUser->permissions)) {
+            return in_array($permission, $vendorUser->permissions);
+        }
+
+        return false;
+    }
 
     // User → Orders (1:N)
     public function orders()

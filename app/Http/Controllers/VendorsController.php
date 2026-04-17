@@ -42,6 +42,7 @@ class VendorsController extends Controller
      */
    public function store(StoreVendorRequest $request)
     {
+
         $data = $request->validated();
         $vendor = Vendor::create($data);
         // $vendor->addMedia($vendor->image)->toMediaCollection('image');
@@ -110,6 +111,7 @@ class VendorsController extends Controller
             'user_id' => 'required|exists:users,id',
             'role' => 'required|in:manager,staff',
             'permissions' => 'nullable|array'
+
         ]);
 
         //  التأكد أن المستخدم الحالي Owner أو Manager
@@ -135,7 +137,8 @@ class VendorsController extends Controller
         // إضافة المستخدم للمتجر
         $vendor->users()->attach($request->user_id, [
             'role' => $request->role,
-            'permissions' => $request->permissions ?? []
+            'permissions' => $request->permissions ?? [],
+            'added_by' => Auth::id(),
         ]);
 
         return back()->with('success', 'User added successfully');
@@ -143,7 +146,7 @@ class VendorsController extends Controller
 
     public function updateUser(Request $request, Vendor $vendor, User $user)
         {
-            // 🔥 التحقق من الصلاحية
+            // التحقق من الصلاحية
             Gate::authorize('updateUser', $vendor);
 
             $vendor->users()->updateExistingPivot($user->id, [
@@ -152,5 +155,15 @@ class VendorsController extends Controller
             ]);
 
             return back()->with('success', 'User updated successfully');
+        }
+
+    public function removeUser(Request $request, Vendor $vendor, User $user)
+        {
+            // التحقق من الصلاحية
+            Gate::authorize('removeUser', $vendor);
+
+            $vendor->users()->detach($user->id);
+
+            return back()->with('success', 'User removed successfully');
         }
 }

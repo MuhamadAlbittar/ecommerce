@@ -9,10 +9,11 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('category_id');
+        Schema::table('categories', function (Blueprint $table) {
+               $table->enum('approval_status', ['pending', 'approved', 'rejected'])->default('pending');
+               $table->unsignedBigInteger('added_by')->nullable()->after('id');
         });
     }
 
@@ -21,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('products', function (Blueprint $table) {
+        Schema::table('categories', function (Blueprint $table) {
             //
         });
     }

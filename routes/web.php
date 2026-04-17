@@ -36,6 +36,8 @@ Route::middleware(['auth'])->group(function () {
     })->name('home');
 
 });
+
+// auth profile route
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -45,18 +47,40 @@ Route::resource('addresses', UserAddressController::class)->except(['show']);
 Route::post('addresses/{address}/set-default', [UserAddressController::class, 'setDefault'])
      ->name('addresses.setDefault');
     });
+// catigory route
+Route::middleware(['auth','UserRole:seller,admin'])->group(function () {
+ Route::resources([
+    'categories' => CategoriesController::class,
+    ]);
+});
+
+Route::middleware(['auth','UserRole:admin'])->group(function () {
+    Route::post('/categories/{category}/approve', [CategoriesController::class, 'approve'])->name('categories.approve');
+    Route::post('/categories/{category}/reject', [CategoriesController::class, 'reject'])->name('categories.reject');
+});
+
+Route::post('/categories/{category}/status', [CategoriesController::class, 'changeStatus'])
+    ->name('categories.changeStatus');
+
+    //sending notification to sellers when category is approved or rejected
+Route::get('/notifications/{id}', function ($id) {
+    $notification = auth()->user()->notifications()->find($id);
+    if ($notification) {$notification->markAsRead();
+        return redirect($notification->data['url']);
+    }
+    return back();
+})->name('notifications.read');
 
 Route::middleware(['auth','UserRole:seller'])->group(function () {
  Route::resources([
+    'products' => ProductsController::class,
+    'vendor-products' => VendorProductsController::class,
+    'vendors' => VendorsController::class,
+    'product-categories' => ProductCategoriesController::class,
     'orders' => OrdersController::class,
     'order-items' => OrderItemsController::class,
     'order-vendors' => OrderVendorsController::class,
     'order-shipments' => OrderShipmentsController::class,
-    'products' => ProductsController::class,
-    'vendor-products' => VendorProductsController::class,
-    'vendors' => VendorsController::class,
-    'categories' => CategoriesController::class,
-    'product-categories' => ProductCategoriesController::class,
     'refunds' => RefundsController::class,
     'refund-items' => RefundItemsController::class,
     'shipping-methods' => ShippingMethodsController::class,
@@ -72,9 +96,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('sellers/{id}', [SellerController::class, 'update'])->name('sellers.update');
         Route::delete('sellers/{id}', [SellerController::class, 'destroy'])->name('sellers.destroy');
     });
-    Route::post('/vendors/{vendor}/users', [VendorsController::class, 'addUser'])->name('vendors.users.store');
-    Route::put('/vendors/{vendor}/users/{user}', [VendorsController::class, 'updateUser'])
-    ->name('vendors.users.update');
+
+Route::post('/vendors/{vendor}/users', [VendorsController::class, 'addUser'])->name('vendors.users.store');
+Route::put('/vendors/{vendor}/users/{user}', [VendorsController::class, 'updateUser'])->name('vendors.users.update');
+Route::delete('/vendors/{vendor}/users/{user}', [VendorsController::class, 'removeUser'])->name('vendors.users.destroy');
 
 
 require __DIR__.'/auth.php';
@@ -88,7 +113,6 @@ Route::resources([
     'refund-items' => RefundItemsController::class,
 
 ]);
-// Storefront
 
 // Cart
 Route::get('/cart', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
@@ -96,5 +120,3 @@ Route::post('/cart/add/{id}', [\App\Http\Controllers\CartController::class, 'add
 Route::get('/cart/remove/{id}', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
 Route::get('/cart/clear', [\App\Http\Controllers\CartController::class, 'clear'])->name('cart.clear');
 Route::get('/store', [\App\Http\Controllers\StoreController::class, 'index'])->name('store.index');
-
-

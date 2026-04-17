@@ -10,23 +10,22 @@
                         <li><a href="index.html" class="text-black sidebar-link active"><i class="fa-solid fa-house"></i><p>Dashboard</p></a></li>
                          @if (auth()->user()->role !== 'customer')
                         <li><a href="{{ route('sellers.index') }}" class="text-black sidebar-link">
+
                             <i class="fa-regular fa-user"></i><p>sellers</p></a></li>
+
+                            <li><a href="{{ route('categories.index') }}" class="text-black sidebar-link">
+                                <i class="fa-solid fa-list"></i><p>Category </p></a></li>
                         @endif
 
 
 
 
                         @if(auth()->user()->role === 'seller')
-                        <li><a href="user-list.html" class="text-black sidebar-link"><i class="fa-regular fa-user"></i><p>Customers</p></a></li>
+                        <li><a href="#" class="text-black sidebar-link "><i class="fa-regular fa-user"></i><p>Customers</p></a></li>
 
-                        <li><a href="{{ route('vendors.index') }}" class="text-black sidebar-link">
+                        <li><a href="{{ route('vendors.index') }}" class="text-black sidebar-link ">
                             <i class="fa-regular fa-store"></i><p>vendors</p></a></li>
-                        <li><a href="#" class="text-black sidebar-link submenu-parent"><i class="fa-solid fa-list"></i><p>Category <i class="fa-solid fa-angle-down right-icon"></i></p></a>
-                            <ul class="sidebar-submenu">
-                                <li><a href="{{ route('categories.create') }}" class="submenu-link">Add</a></li>
-                                <li><a href="{{ route('categories.index') }}" class="submenu-link">List</a></li>
-                            </ul>
-                        </li>
+
                         <li><a href="#" class="text-black sidebar-link submenu-parent"><i class="fa-brands fa-microsoft"></i><p>Products <i class="fa-solid fa-angle-down right-icon"></i></p></a>
                             <ul class="sidebar-submenu">
                                 <li><a href="{{ route('products.create') }}" class="submenu-link">Add</a></li>

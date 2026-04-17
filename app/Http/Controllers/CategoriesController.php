@@ -2,139 +2,110 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\aproveCatigory;
+use App\Http\Requests\category\CategoryRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use \Illuminate\Support\Str;
 use App\Models\Category;
+use App\Models\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\View;
+// use App\Notifications\CategoryApprovedNotification;
+// use App\Notifications\CategoryRejectedNotification;
+use App\Notifications\CategoryStatusNotification;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
+
+
 
 class CategoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+     public function index()
     {
-        $categories = Category::all();
-        return view('adminpanal.category.index', compact('categories'));
+        $categories = Category::with('creator')
+        ->forUser()
+        ->latest()
+        ->get();
+        return view('adminPanal.categories.index', compact('categories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(Request $request)
+    public function store(CategoryRequest $request)
     {
-        return view('adminpanal.category.addList' , compact('request'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-       $request->validate([
-            'name' => 'required|string|max:255',
-            'status' => 'required',
-            'image' => 'nullable|image',
-        ]);
-
-        $data = $request->only(['name', 'status']);
-
-        // إذا كانت الصورة موجودة فقط
+        $data = $request->validated();
+        $data['slug'] = Str::slug($request->name);
+        $data['added_by'] = Auth::id();
+        $data['approval_status'] = Auth::user()->role !== 'admin' ? 'pending' : 'approved';
+        $category = Category::create($data);
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('categories', 'public');
+            $category->addMediaFromRequest('image')->toMediaCollection('category-logo');
         }
 
-        Category::create($data);
-
-        return redirect()->route('categories.index')
-            ->with('success', 'Category created successfully.');
+        return back()->with('success', 'Category added successfully');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(CategoryRequest $request, Category $category)
     {
-        //
+        $data = $request->validated();
+        $data['slug'] = Str::slug($request->name);
+        $data['approval_status'] = Auth::user()->role !== 'admin' ? 'pending' : 'approved';
+        $category->update($data);
+        if ($request->hasFile('image')) {
+            $category->clearMediaCollection('category-logo');
+            $category->addMediaFromRequest('image')->toMediaCollection('category-logo');
+        }
+        return back()->with('success', 'Category updated successfully');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy(Category $category)
     {
-        $category = Category::findOrFail($id);
-        return view('adminpanal.category.edit', compact('category'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
-{
-    // 1) Get category FIRST
-    $category = Category::findOrFail($id);
-
-    // 2) Validation
-    $request->validate([
-        'name'   => 'sometimes|required|string|max:255',
-        'status' => 'sometimes|required|in:Active,Inactive',
-        'image'  => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-    ]);
-
-    // 3) Update status only if sent
-    if ($request->has('status')) {
-        $category->status = $request->status;
-    }
-
-    // 4) Update name if sent
-    if ($request->has('name')) {
-        $category->name = $request->name;
-    }
-
-    // 5) Handle image upload
-    if ($request->hasFile('image')) {
-
-        if ($category->image && Storage::disk('public')->exists($category->image)) {
-            Storage::disk('public')->delete($category->image);
-        }
-
-        $imagePath = $request->file('image')->store('categories', 'public');
-        $category->image = $imagePath;
-    }
-
-    // 6) Save
-    $category->save();
-
-    // 7) Redirect
-    return redirect()
-        ->route('categories.index')
-        ->with('success', 'Category updated successfully');
-}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        $category = Category::findOrFail($id);
-
-        // حذف الصورة إذا موجودة
-        if ($category->image && file_exists(public_path('uploads/categories/' . $category->image))) {
-            unlink(public_path('uploads/categories/' . $category->image));
-        }
-
-        if ($category->products()->count() > 0) {
-            return redirect()->back()->with('error', 'Cannot delete category with existing products');
-        }
-
         $category->delete();
+        return back()->with('success', 'Category deleted');
+    }
+    // // الوظيفة الموافقة على التصنيف (للمسؤول)
+    // public function approve(Category $category)
+    // {
+    //     $category->update(['approval_status' => 'approved']);
+    //     $seller = User::find($category->added_by);
 
-        return redirect()->route('categories.index')
-                 ->with('success', 'Category deleted successfully');
+    //     if ($seller) {
+    //         $seller->notify(new CategoryStatusNotification($category, $status));
+    //     }
+
+    //     return back()->with('success', 'Approved');
+    // }
+    // // الوظيفة رفض التصنيف (للمسؤول) - يمكن تعديلها حسب الحاجة (مثلاً حذف التصنيف بدلاً من رفضه)
+    // public function reject(Category $category)
+    // {
+    //     $category->update(['approval_status' => 'rejected']);
+    //         $seller = User::find($category->added_by);
+
+    //     if ($seller) {
+    //         $seller->notify(new CategoryStatusNotification($category, $status));
+    //     }
+    //     return back()->with('success', 'Rejected');
+    // }
+
+
+    public function changeStatus(Request $request, Category $category)
+    {
+        $request->validate(['status' => 'required|in:approved,rejected,pending']);
+        $status = $request->status;
+        $category->update(['approval_status' => $status]);
+           try {
+        Log::info('Attempting to broadcast event...');
+        event(new aproveCatigory($category));
+        Log::info('Event broadcasted successfully');
+        } catch (\Exception $e) {
+            Log::error('Failed to broadcast event: ' . $e->getMessage());
+        }
+        $user = User::find($category->added_by);
+
+        if ($user) {$user->notify(new CategoryStatusNotification($category, $status));}
+
+
+        return back();
     }
 }

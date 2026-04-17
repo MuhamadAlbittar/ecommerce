@@ -2,20 +2,20 @@
     @section('content')
 {{-- {{ dd($vendor->users) }} --}}
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="container">
+     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="container">
                 <button type="button" class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#addVendorModal">
                     Add Vendor
                 </button>
                  @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+                  <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                  </div>
+               @endif
                 <div class="card shadow-sm border-0 border-radius-12">
                     <div class="card-body p-4">
 
@@ -167,13 +167,13 @@
                     </ul>
                 </div>
             <!-- end pagination -->
-            </div>
         </div>
+      </div>
     </div>
 
             <!-- Modal Add Vendor -->
         <div class="modal fade" id="addVendorModal" tabindex="-1" aria-labelledby="addVendorModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl"> <!-- حجم كبير -->
+        <div class="modal-dialog modal-xl"> 
             <div class="modal-content">
 
             <!-- Header -->

@@ -130,10 +130,10 @@
                                             </div>
                                             </div>
 
-                                            <form action="{{ route('vendors.destroy', $vendor->id) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('vendors.users.destroy', [$vendor->id, $user->id]) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm" onclick="return confirm('Are you sure you want to delete this vendor?')"><i class="fa-solid fa-trash" style="color:red"></i></button>
+                                                <button type="submit" class="btn btn-sm" onclick="return confirm('Are you sure you want to delete this seller staff?')"><i class="fa-solid fa-trash" style="color:red"></i></button>
                                             </form>
 
                                         </td>

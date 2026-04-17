@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Auth;
 use App\Http\Requests\user\StoreUserRequest;
 use App\Http\Controllers\Controller;
+use App\Jobs\welcome_to_our_store;
+use App\Mail\welcomeHome;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -21,10 +24,7 @@ class RegisteredUserController extends Controller
     {
         return view('auth.register');
     }
-    // public function create_vendor_user(): View
-    // {
-    //     return view('adminPanal.user.add_user_vendor');
-    // }
+
 
     /**
      * Handle an incoming registration request.
@@ -38,6 +38,7 @@ public function store(StoreUserRequest $request)
         $data = $request->validated();
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
+        welcome_to_our_store::dispatch($user);
         event(new Registered($user));
         Auth::login($user);
         // توجيه حسب الدور
