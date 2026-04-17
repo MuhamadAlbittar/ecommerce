@@ -16,21 +16,19 @@ class UserRoleMiddleware
      */
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        // التأكد من تسجيل الدخول
+        // 1. التأكد من تسجيل الدخول
         if (!Auth::check()) {
             return redirect()->route('login');
         }
 
         $user = Auth::user();
 
+        // 2. التحقق مما إذا كان دور المستخدم موجود ضمن الأدوار المسموح بها
         if (in_array($user->role, $roles)) {
             return $next($request);
         }
 
-
-        // إذا كان الادمن أو غيره، يمنع الوصول
-        return redirect()->route('dashboard');
+        // 3. إذا لم يكن لديه صلاحية، نرجعه للصفحة الرئيسية للمتجر مع رسالة خطأ
+        return redirect()->route('store.home')->with('error', 'ليس لديك صلاحية للدخول لهذه الصفحة.');
     }
-
-    }
-
+}

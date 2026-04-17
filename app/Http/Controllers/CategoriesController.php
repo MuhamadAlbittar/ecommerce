@@ -2,37 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Category;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\View;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
 
 class CategoriesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // عرض جميع الأقسام
     public function index()
     {
-        $categories = Category::all();
-        return view('adminpanal.category.index', compact('categories'));
+        $categories = Category::latest()->get();
+        return view('adminPanal.category.index', compact('categories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(Request $request)
+    // عرض صفحة الإضافة
+    public function create()
     {
-        return view('adminpanal.category.addList' , compact('request'));
+        return view('adminPanal.category.addList');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // حفظ القسم الجديد
     public function store(Request $request)
     {
        $request->validate([
@@ -47,6 +36,7 @@ class CategoriesController extends Controller
 
          // إذا كانت الصورة موجودة فقط
         if ($request->hasFile('image')) {
+            // حفظ في storage/app/public/categories
             $data['image'] = $request->file('image')->store('categories', 'public');
         }
 
@@ -56,34 +46,20 @@ class CategoriesController extends Controller
                 ->toMediaCollection('images');
         }
 
-        return redirect()->route('categories.index')
-            ->with('success', 'Category created successfully.');
+        return redirect()->route('categories.index')->with('success', 'تم إنشاء القسم بنجاح');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // عرض صفحة التعديل
+    public function edit($id)
     {
         $category = Category::findOrFail($id);
-        return view('adminpanal.category.edit', compact('category'));
+        return view('adminPanal.category.edit', compact('category'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // تحديث القسم
     public function update(Request $request, $id)
-{
-    // 1) Get category FIRST
-    $category = Category::findOrFail($id);
+    {
+        $category = Category::findOrFail($id);
 
     // 2) Validation
     $request->validate([
@@ -92,10 +68,7 @@ class CategoriesController extends Controller
         'image'  => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp|max:5000',
     ]);
 
-    // 3) Update status only if sent
-    if ($request->has('status')) {
-        $category->status = $request->status;
-    }
+        $data = $request->only(['name', 'status']);
 
     // 4) Update name if sent
     if ($request->has('name')) {
@@ -116,34 +89,26 @@ class CategoriesController extends Controller
         // $category->image = $imagePath;
     }
 
-    // 6) Save
-    $category->save();
-
-    // 7) Redirect
-    return redirect()
-        ->route('categories.index')
-        ->with('success', 'Category updated successfully');
-}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
+    // حذف القسم
+    function destroy($id)
     {
         $category = Category::findOrFail($id);
 
-        // حذف الصورة إذا موجودة
-        if ($category->image && file_exists(public_path('uploads/categories/' . $category->image))) {
-            unlink(public_path('uploads/categories/' . $category->image));
+        // التحقق: هل يوجد منتجات مرتبطة بهذا القسم؟
+        // (يجب أن تكون لديك علاقة products في موديل Category)
+        if ($category->products()->count() > 0) {
+            return redirect()->route('categories.index')
+                ->with('error', 'لا يمكن حذف القسم لأنه يحتوي على منتجات!');
         }
 
-        if ($category->products()->count() > 0) {
-            return redirect()->back()->with('error', 'Cannot delete category with existing products');
+        // حذف الصورة من التخزين
+        if ($category->image) {
+            Storage::disk('public')->delete($category->image);
         }
 
         $category->delete();
 
-        return redirect()->route('categories.index')
-                 ->with('success', 'Category deleted successfully');
+        return redirect()->route('categories.index')->with('success', 'تم حذف القسم بنجاح');
     }
+}
 }
