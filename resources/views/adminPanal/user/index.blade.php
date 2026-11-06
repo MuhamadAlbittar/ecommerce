@@ -1,8 +1,10 @@
 @extends('layouts.app')
 @section('content')
-<button type="button" class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#addSellerModal">
-  Add Seller
-</button>
+<button type="button" class="btn m-3" 
+                        style="background-color: #266663; border-color: #266663; color: #FFFFFF;" 
+                        data-bs-toggle="modal" data-bs-target="#addVendorModal">
+                    Add Vendor
+                </button>
       @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>

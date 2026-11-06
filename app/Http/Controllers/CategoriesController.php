@@ -33,31 +33,56 @@ class CategoriesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // public function store(Request $request)
+    // {
+    //    $request->validate([
+    //         'name' => 'required|string|max:255',
+    //         'status' => 'required',
+    //         'image' => 'nullable|image|max:5000|mimes:jpg,jpeg,png,webp',
+    //     ]);
+
+    //     $data = $request->only(['name', 'status']);
+
+    //     Category::create($data);
+
+    //      // إذا كانت الصورة موجودة فقط
+    //     if ($request->hasFile('image')) {
+    //         $data['image'] = $request->file('image')->store('categories', 'public');
+    //     }
+
+    //     if ($request->hasFile('image')) {   
+    //             $category
+    //             ->addMedia($request->file('image'))
+    //             ->toMediaCollection('images');
+    //     }
+
+    //     return redirect()->route('categories.index')
+    //         ->with('success', 'Category created successfully.');
+    // }
+
     public function store(Request $request)
     {
-       $request->validate([
-            'name' => 'required|string|max:255',
-            'status' => 'required',
-            'image' => 'nullable|image|max:5000|mimes:jpg,jpeg,png,webp',
+        // 1. تحقق من الحقول المطلوبة (Validation)
+        $validated = $request->validate([
+            'name'  => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // شروط الصورة
         ]);
 
-        $data = $request->only(['name', 'status']);
+        // 2. إنشاء التصنيف وحفظه في متغير باسم $category
+        // (هنا تم حل مشكلة Undefined variable)
+        $category = Category::create([
+            'name' => $request->name,
+            // أضف أي حقول أخرى هنا إذا كانت موجودة في الفورم
+        ]);
 
-        Category::create($data);
-
-         // إذا كانت الصورة موجودة فقط
+        // 3. رفع الصورة وربطها بالتصنيف باستخدام حزمة سباتشي
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('categories', 'public');
+            $category->addMediaFromRequest('image')
+                    ->toMediaCollection('images');
         }
 
-        if ($request->hasFile('image')) {   
-                $category
-                ->addMedia($request->file('image'))
-                ->toMediaCollection('images');
-        }
-
-        return redirect()->route('categories.index')
-            ->with('success', 'Category created successfully.');
+        // 4. إعادة التوجيه بعد النجاح
+        return redirect()->route('categories.index')->with('success', 'تم إنشاء التصنيف بنجاح');
     }
 
     /**
@@ -81,49 +106,45 @@ class CategoriesController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-{
-    // 1) Get category FIRST
-    $category = Category::findOrFail($id);
+    {
+        // 1) جلب التصنيف أولاً
+        $category = Category::findOrFail($id);
 
-    // 2) Validation
-    $request->validate([
-        'name'   => 'sometimes|required|string|max:255',
-        'status' => 'sometimes|required|in:Active,Inactive',
-        'image'  => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp|max:5000',
-    ]);
+        // 2) التحقق من البيانات المرسلة
+        $request->validate([
+            'name'   => 'sometimes|required|string|max:255',
+            'status' => 'sometimes|required|in:Active,Inactive',
+            'image'  => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp|max:5000',
+        ]);
 
-    // 3) Update status only if sent
-    if ($request->has('status')) {
-        $category->status = $request->status;
+        // 3) تحديث الحقول النصية إذا تم إرسالها
+        if ($request->has('status')) {
+            $category->status = $request->status;
+        }
+
+        if ($request->has('name')) {
+            $category->name = $request->name;
+        }
+
+        // 4) التعامل مع رفع وتحديث الصورة عبر سباتشي
+        if ($request->hasFile('image')) {
+            // 💡 حذف الصور القديمة المسجلة لهذا التصنيف لكي تحل الصورة الجديدة مكانها فوراً
+            $category->clearMediaCollection('images');
+
+            // رفع الصورة الجديدة وتخزينها
+            $category->addMedia($request->file('image'))
+                    ->toMediaCollection('images');
+        }
+
+        // 5) حفظ التغييرات في قاعدة البيانات
+        $category->save();
+
+        // 6) إعادة التوجيه
+        return redirect()
+            ->route('categories.index')
+            ->with('success', 'Category updated successfully');
     }
 
-    // 4) Update name if sent
-    if ($request->has('name')) {
-        $category->name = $request->name;
-    }
-
-    // 5) Handle image upload
-    if ($request->hasFile('image')) {
-
-        // if ($category->image && Storage::disk('public')->exists($category->image)) {
-        //     Storage::disk('public')->delete($category->image);
-        // } 
-        $category
-        ->addMedia($request->file('image'))
-        ->toMediaCollection('images');
-    
-        // $imagePath = $request->file('image')->store('categories', 'public');
-        // $category->image = $imagePath;
-    }
-
-    // 6) Save
-    $category->save();
-
-    // 7) Redirect
-    return redirect()
-        ->route('categories.index')
-        ->with('success', 'Category updated successfully');
-}
 
     /**
      * Remove the specified resource from storage.
