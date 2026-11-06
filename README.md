@@ -6,6 +6,7 @@ A full-featured multi-vendor e-commerce platform built with Laravel. The system 
         User registration and login
         Role-based access control
         Protected routes and middleware
+        JWT Authentication
     
     #Vendor Management:
         Vendor creation and management
