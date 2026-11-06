@@ -91,7 +91,8 @@ A full-featured multi-vendor e-commerce platform built with Laravel. The system 
     Invoice
     
     Vendor Dashboard
-    Vendor Dashboard
+    <img width="1893" height="957" alt="image" src="https://github.com/user-attachments/assets/41fd2059-0ce2-4241-aa2f-656c7c7e7c0c" />
+
     
     Product Search & Filters
     Search
