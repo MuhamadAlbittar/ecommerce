@@ -69,7 +69,7 @@ A full-featured multi-vendor e-commerce platform built with Laravel. The system 
 
 # Screenshots:
     Home Page
-    <img width="1914" height="954" alt="image" src="https://github.com/user-attachments/assets/9c2bc414-1fda-43b8-b88e-e58dfb204acb" />
+<img width="1914" height="954" alt="image" src="https://github.com/user-attachments/assets/9c2bc414-1fda-43b8-b88e-e58dfb204acb" />
 
     
     Product Listing
@@ -91,7 +91,7 @@ A full-featured multi-vendor e-commerce platform built with Laravel. The system 
     Invoice
     
     Vendor Dashboard
-    <img width="1893" height="957" alt="image" src="https://github.com/user-attachments/assets/fe363c8e-080f-49bf-a6ec-437c9cef4ed2" />
+<img width="1893" height="957" alt="image" src="https://github.com/user-attachments/assets/fe363c8e-080f-49bf-a6ec-437c9cef4ed2" />
 
     
     Product Search & Filters
@@ -120,5 +120,3 @@ A full-featured multi-vendor e-commerce platform built with Laravel. The system 
     Yaman Daboul
     GitHub: https://github.com/Yaman-Daboul
     LinkedIn: https://www.linkedin.com/in/yaman-daboul-539a41445
-<img width="1893" height="957" alt="image" src="https://github.com/user-attachments/assets/03cc613f-4777-4acf-8e8d-e5f58a36b8e5" />
-
