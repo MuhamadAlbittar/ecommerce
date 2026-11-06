@@ -69,36 +69,25 @@ A full-featured multi-vendor e-commerce platform built with Laravel. The system 
 
 # Screenshots:
     Home Page
-<img width="1914" height="954" alt="image" src="https://github.com/user-attachments/assets/9c2bc414-1fda-43b8-b88e-e58dfb204acb" />
 
-    
     Product Listing
-    Product Listing
-    
-    Product Details
-    Product Details
-    
+<img width="1898" height="962" alt="image" src="https://github.com/user-attachments/assets/f5e2a4f5-0eb7-4138-8195-c5f98052b39f" />
+
     Shopping Cart
-    Cart
-    
-    Checkout Process
-    Checkout
-    
-    Order Management
-    Orders
-    
-    Invoice Page
-    Invoice
-    
+<img width="1894" height="909" alt="image" src="https://github.com/user-attachments/assets/6420090d-98ee-4d3a-a48a-58b8e163b6f1" />
+ 
     Vendor Dashboard
 <img width="1893" height="957" alt="image" src="https://github.com/user-attachments/assets/fe363c8e-080f-49bf-a6ec-437c9cef4ed2" />
 
-    
-    Product Search & Filters
-    Search
-    
-    Admin Dashboard
-    Admin Dashboard
+    Seller Dashboard
+<img width="1914" height="954" alt="image" src="https://github.com/user-attachments/assets/9c2bc414-1fda-43b8-b88e-e58dfb204acb" />
+
+    Checkout Process
+    Later...
+    Order Management
+    Later...
+    Invoice Page
+    Later...
 
 # Installation:
     git clone <repository-url>
