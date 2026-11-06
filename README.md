@@ -120,4 +120,5 @@ A full-featured multi-vendor e-commerce platform built with Laravel. The system 
     Yaman Daboul
     GitHub: https://github.com/Yaman-Daboul
     LinkedIn: https://www.linkedin.com/in/yaman-daboul-539a41445
+<img width="1893" height="957" alt="image" src="https://github.com/user-attachments/assets/03cc613f-4777-4acf-8e8d-e5f58a36b8e5" />
 
