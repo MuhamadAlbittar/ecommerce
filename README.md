@@ -77,7 +77,7 @@ A full-featured multi-vendor e-commerce platform built with Laravel. The system 
     Shopping Cart
 <img width="1894" height="909" alt="image" src="https://github.com/user-attachments/assets/6420090d-98ee-4d3a-a48a-58b8e163b6f1" />
  
-    Vendor Dashboard
+    Vendors List
 <img width="1893" height="957" alt="image" src="https://github.com/user-attachments/assets/fe363c8e-080f-49bf-a6ec-437c9cef4ed2" />
 
     Seller Dashboard
